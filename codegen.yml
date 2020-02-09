@@ -1,0 +1,12 @@
+overwrite: true
+schema: 'schema.json'
+documents:
+  - './source/**/*.{ts,tsx}'
+generates:
+  source/types.d.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+    config:
+      withHooks: true
+      preResolveTypes: true

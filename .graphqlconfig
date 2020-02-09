@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "fantasy": {
+      "schemaPath": "schema.graphql",
+      "extensions": {
+        "endpoints": {
+          "dev": "https://fantasy-draft-api.localhost.dev/graphql"
+        }
+      }
+    }
+  }
+}

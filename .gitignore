@@ -1,0 +1,5 @@
+/build
+.DS_Store
+/node_modules
+schema.json
+/source/types.d.ts
