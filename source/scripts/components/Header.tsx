@@ -7,10 +7,14 @@ const Wrapper = styled.header`
   display: block;
   border-bottom: 1px solid black;
   height: 80px;
+  position: fixed;
+  width: 100%;
+  z-index: 9;
+  background-color: white;
 
   & ${Lock} {
     padding-right: 0;
-    max-width: 100%;
+    width: 100%;
   }
 
   & .header-layout {
