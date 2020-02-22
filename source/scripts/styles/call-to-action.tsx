@@ -7,6 +7,11 @@ export const CTAStyles = css`
   display: inline-block;
   margin-top: 20px;
   text-transform: uppercase;
+  transition: background 0.5s ease-in-out;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 const CTA = styled.div`

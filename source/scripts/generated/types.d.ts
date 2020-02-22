@@ -13,12 +13,12 @@ export type Scalars = {
 export type Athlete = {
    __typename?: 'Athlete',
   id: Scalars['ID'],
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
+  first_name: Scalars['String'],
+  last_name: Scalars['String'],
   school: Scalars['String'],
   position: Scalars['String'],
-  schoolStanding: Scalars['String'],
-  eligibleYear: Scalars['String'],
+  school_standing: Scalars['String'],
+  eligible_year: Scalars['String'],
   height?: Maybe<Scalars['String']>,
   weight?: Maybe<Scalars['String']>,
   description?: Maybe<Scalars['String']>,
@@ -34,20 +34,83 @@ export type AthletePaginator = {
   data: Array<Athlete>,
 };
 
-
-
-export type Mutation = {
-   __typename?: 'Mutation',
-  createUser: User,
+export type AuthPayload = {
+   __typename?: 'AuthPayload',
+  access_token?: Maybe<Scalars['String']>,
+  refresh_token?: Maybe<Scalars['String']>,
+  expires_in?: Maybe<Scalars['Int']>,
+  token_type?: Maybe<Scalars['String']>,
+  user?: Maybe<User>,
 };
 
 
-export type MutationCreateUserArgs = {
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
-  username: Scalars['String'],
+
+export type ForgotPasswordInput = {
   email: Scalars['String'],
-  password: Scalars['String']
+};
+
+export type ForgotPasswordResponse = {
+   __typename?: 'ForgotPasswordResponse',
+  status: Scalars['String'],
+  message?: Maybe<Scalars['String']>,
+};
+
+export type LoginInput = {
+  username: Scalars['String'],
+  password: Scalars['String'],
+};
+
+export type LogoutResponse = {
+   __typename?: 'LogoutResponse',
+  status: Scalars['String'],
+  message?: Maybe<Scalars['String']>,
+};
+
+export type Mutation = {
+   __typename?: 'Mutation',
+  register: RegisterResponse,
+  verifyEmail: AuthPayload,
+  login: AuthPayload,
+  forgotPassword: ForgotPasswordResponse,
+  refreshToken: RefreshTokenPayload,
+  logout: LogoutResponse,
+  updateForgottenPassword: ForgotPasswordResponse,
+};
+
+
+export type MutationRegisterArgs = {
+  input?: Maybe<RegisterInput>
+};
+
+
+export type MutationVerifyEmailArgs = {
+  input: VerifyEmailInput
+};
+
+
+export type MutationLoginArgs = {
+  input?: Maybe<LoginInput>
+};
+
+
+export type MutationForgotPasswordArgs = {
+  input: ForgotPasswordInput
+};
+
+
+export type MutationRefreshTokenArgs = {
+  input?: Maybe<RefreshTokenInput>
+};
+
+
+export type MutationUpdateForgottenPasswordArgs = {
+  input?: Maybe<NewPasswordWithCodeInput>
+};
+
+export type NewPasswordWithCodeInput = {
+  email: Scalars['String'],
+  token: Scalars['String'],
+  password: Scalars['String'],
 };
 
 /** Allows ordering a list of records. */
@@ -102,26 +165,13 @@ export type PaginatorInfo = {
 
 export type Query = {
    __typename?: 'Query',
-  users?: Maybe<UserPaginator>,
-  user?: Maybe<User>,
   athletes?: Maybe<AthletePaginator>,
   athlete?: Maybe<Athlete>,
 };
 
 
-export type QueryUsersArgs = {
-  first?: Maybe<Scalars['Int']>,
-  page?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryUserArgs = {
-  id?: Maybe<Scalars['ID']>
-};
-
-
 export type QueryAthletesArgs = {
-  eligibleYear: Scalars['String'],
+  eligible_year: Scalars['String'],
   school?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   page?: Maybe<Scalars['Int']>
@@ -131,6 +181,37 @@ export type QueryAthletesArgs = {
 export type QueryAthleteArgs = {
   id?: Maybe<Scalars['ID']>
 };
+
+export type RefreshTokenInput = {
+  refresh_token?: Maybe<Scalars['String']>,
+};
+
+export type RefreshTokenPayload = {
+   __typename?: 'RefreshTokenPayload',
+  access_token: Scalars['String'],
+  refresh_token: Scalars['String'],
+  expires_in: Scalars['Int'],
+  token_type: Scalars['String'],
+};
+
+export type RegisterInput = {
+  first_name: Scalars['String'],
+  last_name: Scalars['String'],
+  username: Scalars['String'],
+  email: Scalars['String'],
+  password: Scalars['String'],
+};
+
+export type RegisterResponse = {
+   __typename?: 'RegisterResponse',
+  tokens?: Maybe<AuthPayload>,
+  status: RegisterStatuses,
+};
+
+export enum RegisterStatuses {
+  MustVerifyEmail = 'MUST_VERIFY_EMAIL',
+  Success = 'SUCCESS'
+}
 
 /** The available directions for ordering a list of records. */
 export enum SortOrder {
@@ -152,24 +233,17 @@ export enum Trashed {
 
 export type User = {
    __typename?: 'User',
-  id: Scalars['ID'],
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
+  first_name: Scalars['String'],
+  last_name: Scalars['String'],
   email: Scalars['String'],
-  createdAt: Scalars['DateTime'],
-  updatedAt: Scalars['DateTime'],
+  username: Scalars['String'],
 };
 
-/** A paginated list of User items. */
-export type UserPaginator = {
-   __typename?: 'UserPaginator',
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo,
-  /** A list of User items. */
-  data: Array<User>,
+export type VerifyEmailInput = {
+  token: Scalars['String'],
 };
 
-export type AthleteDataFragment = { __typename?: 'Athlete', id: string, firstName: string, lastName: string, school: string, position: string };
+export type AthleteDataFragment = { __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string };
 
 export type FetchAthletesQueryVariables = {
   year: Scalars['String']
@@ -202,13 +276,30 @@ export type FetchAthletesBySchoolQuery = { __typename?: 'Query', athletes: Maybe
       & AthleteDataFragment
     )> }> };
 
-export type CreateUserMutationVariables = {
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
-  email: Scalars['String'],
-  username: Scalars['String'],
-  password: Scalars['String']
+export type ForgotPasswordMutationVariables = {
+  input: ForgotPasswordInput
 };
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, firstName: string } };
+export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: { __typename?: 'ForgotPasswordResponse', status: string, message: Maybe<string> } };
+
+export type LoginMutationVariables = {
+  input: LoginInput
+};
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', access_token: Maybe<string>, user: Maybe<{ __typename?: 'User', first_name: string, username: string }> } };
+
+export type RegisterUserMutationVariables = {
+  input: RegisterInput
+};
+
+
+export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'RegisterResponse', status: RegisterStatuses } };
+
+export type VerifyEmailMutationVariables = {
+  input: VerifyEmailInput
+};
+
+
+export type VerifyEmailMutation = { __typename?: 'Mutation', verifyEmail: { __typename?: 'AuthPayload', access_token: Maybe<string> } };

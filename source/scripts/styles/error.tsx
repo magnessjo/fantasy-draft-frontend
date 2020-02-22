@@ -43,7 +43,7 @@ const Loader = ({
   close,
 }: {
   errorCodes?: Array<string> | string | ApolloError;
-  close: any;
+  close?: () => void;
 }) => {
   console.log(errorCodes);
   return (

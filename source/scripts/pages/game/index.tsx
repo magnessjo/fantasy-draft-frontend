@@ -8,13 +8,13 @@ import {
   FetchAthletesBySchoolQueryVariables,
   FetchAthletesByIdQuery,
   FetchAthletesByIdQueryVariables,
-} from '../../generated/types.d';
+} from '../../generated/types';
 
 const ATHLETE_DATA = gql`
   fragment AthleteData on Athlete {
     id
-    firstName
-    lastName
+    first_name
+    last_name
     school
     position
   }
@@ -22,7 +22,7 @@ const ATHLETE_DATA = gql`
 
 const ATHLETES_QUERY = gql`
   query FetchAthletes($year: String!) {
-    athletes(eligibleYear: $year) {
+    athletes(eligible_year: $year) {
       data {
         ...AthleteData
       }
@@ -46,7 +46,7 @@ const ATHLETE_ID_QUERY = gql`
 
 const ATHLETE_SCHOOL_QUERY = gql`
   query FetchAthletesBySchool($year: String!, $school: String!) {
-    athletes(eligibleYear: $year, school: $school) {
+    athletes(eligible_year: $year, school: $school) {
       data {
         ...AthleteData
       }
@@ -62,8 +62,6 @@ const Athletes = () => {
       variables: { year: '2020' },
     },
   );
-
-  console.log('called');
 
   const { data: playerIds } = useQuery<
     FetchAthletesByIdQuery,

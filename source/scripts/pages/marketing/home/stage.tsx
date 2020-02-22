@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import Lock from 'scripts/styles/lock';
 import { CTAStyles } from 'scripts/styles/call-to-action';
 import { Color } from 'scripts/variables';
-
-const Container = styled.div`
-  height: 500vh;
-  padding-top: 80px;
-`;
+import { useSelector } from 'react-redux';
+import { RootState, UserType } from 'scripts/types';
 
 const Stage = styled.section`
   position: relative;
@@ -54,6 +51,8 @@ const Stage = styled.section`
         border-radius: 50%;
         background-color: black;
         padding: 100vw;
+        height: 100px;
+        width: 100px;
         background: radial-gradient(
           rgba(255, 255, 255, 1) 0,
           rgba(255, 255, 255, 0.4) 50%,
@@ -80,7 +79,7 @@ const Stage = styled.section`
 
   & h1 {
     font-family: 'Playfair Display', serif;
-    text-shadow: 1px 2px rgba(255, 255, 255, 0.6);
+    text-shadow: 1px 1px rgba(255, 255, 255, 0.6);
     font-weight: 700;
     letter-spacing: 10px;
     font-size: 40px;
@@ -119,35 +118,51 @@ const SignUpButton = styled(Link)`
   background-color: ${Color.black};
   color: ${Color.white};
   letter-spacing: 2px;
+
+  &:hover {
+    background-color: ${Color.hoverBlack};
+  }
 `;
 
+const LoggedIn = ({ user }: { user: string }) => (
+  <div>
+    <h1>Hello {user}, </h1>
+    <h2>Welcome to best draft game on the internet!</h2>
+    <SignUpButton to="/entries">Select your Entries</SignUpButton>
+  </div>
+);
+
+const LoggedOut = () => (
+  <div>
+    <h1>Draft Pick</h1>
+    <h2>The annual mock draft game</h2>
+    <p>
+      Compete aganist your friends, family, and other fans for the ultimate
+      prize of being right
+    </p>
+    <SignUpButton to="/register">Signup</SignUpButton>
+  </div>
+);
+
 const Home = () => {
+  const user = useSelector<RootState, UserType>(state => state.userState);
+
   return (
-    <Container>
-      <Stage>
-        <video
-          muted
-          playsInline
-          autoPlay
-          placeholder="/images/home/stage-default.jpg"
-        >
-          <source src="/videos/hugs.mp4" type="video/mp4" />
-        </video>
-        <div>
-          <Lock>
-            <div>
-              <h1>Draft Clash</h1>
-              <h2>The annual mock draft game</h2>
-              <p>
-                Compete aganist your friends, family, and other fans for the
-                ultimate prize of being right
-              </p>
-              <SignUpButton to="/sign-up">Signup</SignUpButton>
-            </div>
-          </Lock>
-        </div>
-      </Stage>
-    </Container>
+    <Stage>
+      <video
+        muted
+        playsInline
+        autoPlay
+        placeholder="/images/home/stage-default.jpg"
+      >
+        <source src="/videos/hugs.mp4" type="video/mp4" />
+      </video>
+      <div>
+        <Lock>
+          {user ? <LoggedIn user={user.first_name} /> : <LoggedOut />}
+        </Lock>
+      </div>
+    </Stage>
   );
 };
 

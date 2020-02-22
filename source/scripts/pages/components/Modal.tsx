@@ -31,6 +31,7 @@ const Container = styled.div`
   background-color: rgba(255, 255, 255, 0.99);
   cursor: default;
   position: relative;
+  text-align: center;
 
   @media (min-width: 768px) {
     padding: 40px;
@@ -44,20 +45,20 @@ const Container = styled.div`
     & > div {
       width: 100%;
     }
+  }
 
-    & > button {
-      ${CTAStyles}
-      background-color: ${Color.black};
-      color: ${Color.white};
-      align-self: flex-end;
-      margin: 0 auto;
-    }
+  & button {
+    ${CTAStyles}
+    background-color: ${Color.black};
+    color: ${Color.white};
+    align-self: flex-end;
+    margin: 0 auto;
   }
 
   & button[aria-hidden] {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
     font-size: 22px;
     padding: 10px 15px;
     border: 1px solid ${Color.black};
@@ -70,15 +71,21 @@ const Container = styled.div`
 const HeadlineTextStyle = styled.div`
   align-self: center;
 
-  & .headline {
+  & p {
+    line-height: 1.4em;
     margin-bottom: 20px;
   }
 `;
 
-const HeadlineText = ({ headline, text }: ModalHeadlineTextType) => (
+const HeadlineText = ({
+  headline,
+  text,
+  close,
+}: ModalHeadlineTextType & { close: () => void }) => (
   <HeadlineTextStyle>
     <LargeFont>{headline}</LargeFont>
     <p>{text}</p>
+    <button onClick={close}>Close Modal</button>
   </HeadlineTextStyle>
 );
 
@@ -89,10 +96,8 @@ const Modal = () => {
     state => state.modalState,
   );
 
-  // if (!showing && modalState) setShowing(true);
-  // if (showing && modalState === null) setShowing(false);
-
-  if (!showing) setShowing(true);
+  if (!showing && modalState) setShowing(true);
+  if (showing && modalState === null) setShowing(false);
 
   const close = () => dispatch(setModalAction(null));
 
@@ -106,9 +111,8 @@ const Modal = () => {
             X
           </button>
           {modalState.headlineText && (
-            <HeadlineText {...modalState.headlineText} />
+            <HeadlineText {...modalState.headlineText} close={close} />
           )}
-          <button onClick={close}>Close Modal</button>
         </div>
       </Container>
     </CloseWrapper>
