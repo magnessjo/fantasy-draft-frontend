@@ -1,20 +1,22 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Lock from 'scripts/styles/Lock';
-import CTA from 'scripts/styles/CallToAction';
+import Lock from 'scripts/styles/lock';
+import { Color } from 'scripts/variables';
 
 const Wrapper = styled.header`
   display: block;
-  border-bottom: 1px solid black;
   height: 80px;
   position: fixed;
   width: 100%;
   z-index: 9;
   background-color: white;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 
   & ${Lock} {
     padding-right: 0;
     width: 100%;
+    max-width: 100%;
   }
 
   & .header-layout {
@@ -41,6 +43,14 @@ const Wrapper = styled.header`
       align-items: center;
     }
   }
+
+  & .login {
+    font-weight: 700;
+    background-color: ${Color.blue};
+    padding: 10px 20px;
+    letter-spacing: 0.5px;
+    color: ${Color.white};
+  }
 `;
 
 const Header = () => (
@@ -52,15 +62,15 @@ const Header = () => (
         </a>
 
         <nav>
-          <a href="">
+          <Link to="/">
             <span>Example</span>
-          </a>
-          <a href="">
+          </Link>
+          <Link to="/">
             <span>Example</span>
-          </a>
-          <CTA>
+          </Link>
+          <Link to="/" className="login">
             <span>Login</span>
-          </CTA>
+          </Link>
         </nav>
       </div>
     </Lock>

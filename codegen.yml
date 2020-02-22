@@ -3,7 +3,7 @@ schema: 'schema.json'
 documents:
   - './source/**/*.{ts,tsx}'
 generates:
-  source/types.d.ts:
+  source/scripts/generated/types.d.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'

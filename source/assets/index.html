@@ -11,7 +11,7 @@
     <style>
       :root {
         font-family: 'Lato', sans-serif;;
-        line-height: 1em;
+        line-height: 1.6em;
         font-weight: 400;
       }
 
@@ -69,12 +69,30 @@
       }
 
       input[type='text'],
+      input[type='email'],
+      input[type='password'],
       select {
         height: 42px;
         background-color: transparent;
         padding: 10px 0;
         width: 100%;
         border: none;
+        border: 1px solid #d3d3d3;
+        padding: 0 10px;
+      }
+
+      input::placeholder,
+      input::-webkit-input-placeholder {
+        color: rgba(0, 0, 0, 0.3);
+      }
+
+      label {
+        font-size: 12px;
+        margin-bottom: 3px;
+        margin-left: 1px;
+        line-height: 1em;
+        display: block;
+        text-align: left;
       }
     </style>
   </head>

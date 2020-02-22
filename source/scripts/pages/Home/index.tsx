@@ -1,45 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
-import Lock from 'scripts/styles/Lock';
-import { FetchAthletesQueryVariables, FetchAthletesQuery } from 'types.d';
-
-const ATHLETES_QUERY = gql`
-  query FetchAthletes {
-    athletes {
-      id
-      firstName
-      lastName
-      school
-      position
-    }
-  }
-`;
-
-const ATHLETE_ID_QUERY = gql`
-  query FetchAthletesByID($id: Int!) {
-    athletes(id: $id) {
-      id
-      firstName
-      lastName
-      school
-      position
-    }
-  }
-`;
-
-const ATHLETE_SCHOOL_QUERY = gql`
-  query FetchAthletesBySchool($school: String!) {
-    athletes(school: $school) {
-      id
-      firstName
-      lastName
-      school
-      position
-    }
-  }
-`;
+import Lock from 'scripts/styles/lock';
+import { CTAStyles } from 'scripts/styles/call-to-action';
+import { Color } from 'scripts/variables';
 
 const Container = styled.div`
   height: 500vh;
@@ -147,29 +111,17 @@ const Stage = styled.section`
   }
 `;
 
+const SignUpButton = styled(Link)`
+  ${CTAStyles}
+  display: inline-block;
+  margin-top: 20px;
+  text-transform: uppercase;
+  background-color: ${Color.black};
+  color: ${Color.white};
+  letter-spacing: 2px;
+`;
+
 const Home = () => {
-  const { data } = useQuery<FetchAthletesQuery, FetchAthletesQueryVariables>(
-    ATHLETES_QUERY,
-  );
-
-  const { data: playerIds } = useQuery<
-    FetchAthletesQuery,
-    FetchAthletesQueryVariables
-  >(ATHLETE_ID_QUERY, {
-    variables: { id: 170 },
-  });
-
-  const { data: playerBySchool } = useQuery<
-    FetchAthletesQuery,
-    FetchAthletesQueryVariables
-  >(ATHLETE_SCHOOL_QUERY, {
-    variables: { school: 'Alabama' },
-  });
-
-  if (data) console.log(data);
-  if (playerIds) console.log(playerIds);
-  if (playerBySchool) console.log(playerBySchool);
-
   return (
     <Container>
       <Stage>
@@ -190,6 +142,7 @@ const Home = () => {
                 Compete aganist your friends, family, and other fans for the
                 ultimate prize of being right
               </p>
+              <SignUpButton to="/sign-up">Signup</SignUpButton>
             </div>
           </Lock>
         </div>
