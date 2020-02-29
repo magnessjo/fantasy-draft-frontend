@@ -288,7 +288,7 @@ export type LoginMutationVariables = {
 };
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', access_token: Maybe<string>, user: Maybe<{ __typename?: 'User', first_name: string, username: string }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', access_token: Maybe<string>, expires_in: Maybe<number>, user: Maybe<{ __typename?: 'User', first_name: string, username: string }> } };
 
 export type RegisterUserMutationVariables = {
   input: RegisterInput

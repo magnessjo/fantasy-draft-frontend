@@ -48,12 +48,17 @@ const ForgotPassword = () => {
     }
   };
 
+  const successText =
+    data?.forgotPassword?.status === 'EMAIL_SENT'
+      ? data?.forgotPassword?.message
+      : undefined;
+
   return (
     <UserForm
       initalFormValue={initialFormState}
       successfulForm={formSumit}
-      error={error}
       loading={loading}
+      successMessage={successText}
       styleAdjustments={styles}
     >
       {({ formState, setFormState }: FormStateTypes) => {

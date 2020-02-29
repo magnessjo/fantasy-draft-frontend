@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { setAlertAction, setUserAction } from 'scripts/store';
-import { setSession } from 'scripts/store/sesson';
+import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
 import UserForm, { FormStateTypes } from './shared/form';
 import { InputSubmit } from './shared/styles';
 import { LoginMutation, LoginMutationVariables } from 'scripts/generated/types';
 import Input, { FormInputs } from './shared/input';
+import { getSessionTime } from 'scripts/lib/session';
 
 const initialFormState = {
   username: '',
@@ -19,6 +19,7 @@ const CREATE_USER = gql`
   mutation login($input: LoginInput!) {
     login(input: $input) {
       access_token
+      expires_in
       user {
         first_name
         username
@@ -36,18 +37,18 @@ const Login = () => {
   >(CREATE_USER);
 
   if (data) {
-    const authToken = data?.login?.access_token;
-    const user = data?.login?.user;
+    const loginData = data?.login;
+    const user = loginData?.user;
+    const token = loginData?.access_token;
+    const expires = loginData?.expires_in;
 
-    if (authToken) {
-      setSession(authToken);
-    }
-
-    if (user) {
+    if (token && expires && user) {
       dispatch(
         setUserAction({
           first_name: user.first_name,
           username: user.username,
+          token,
+          expires,
         }),
       );
 
@@ -55,6 +56,12 @@ const Login = () => {
         setAlertAction({
           type: 'notice',
           text: 'You have been logged in',
+        }),
+      );
+
+      dispatch(
+        setSessionAction({
+          time: getSessionTime(),
         }),
       );
     }
@@ -72,11 +79,15 @@ const Login = () => {
     }
   };
 
+  console.log(error);
+
   return (
     <UserForm
       initalFormValue={initialFormState}
       successfulForm={formSumit}
-      error={error}
+      errorMessage={
+        error && 'The email or password you have entered is invalid'
+      }
       loading={loading}
     >
       {({ formState, setFormState }: FormStateTypes) => {

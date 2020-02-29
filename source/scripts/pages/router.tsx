@@ -1,12 +1,11 @@
 import React from 'react';
-import { Route, useLocation } from 'react-router-dom';
+import { Route, useLocation, Redirect } from 'react-router-dom';
+import { isValidSession } from 'scripts/lib/session';
 
 // Pages
 
 import Home from './marketing/home';
 import Profile from './profile';
-import Athletes from './game';
-import Groups from './game/groups';
 import Entries from './game/entries';
 
 // Login
@@ -22,6 +21,7 @@ import Header from './components/header';
 import Modal from './components/modal';
 import Alert from './components/alert';
 import styled from 'styled-components';
+import { setSessionAction } from 'scripts/store';
 
 const PageWrapper = styled.div`
   padding-top: 80px;
@@ -37,6 +37,23 @@ const Layout = ({
     <PageWrapper>{children}</PageWrapper>
   </div>
 );
+
+const ProtectedRoute = ({
+  path,
+  Component,
+}: {
+  path: string;
+  Component: any;
+}) => {
+  const validSession = isValidSession();
+
+  return (
+    <Route
+      path={path}
+      render={() => (validSession ? Component : <Redirect to="/login" />)}
+    />
+  );
+};
 
 const nonHeaderPaths = [
   '/register',
@@ -61,10 +78,8 @@ const Router = () => {
       {!checkHeaderPaths(location.pathname) && (
         <Layout>
           <Route path="/" exact={true} render={() => <Home />} />
-          <Route path="/profile" render={() => <Profile />} />
-          <Route path="/athlete" render={() => <Athletes />} />
-          <Route path="/entries" render={() => <Entries />} />
-          <Route path="/groups" render={() => <Groups />} />
+          <ProtectedRoute path={'/profile'} Component={<Profile />} />
+          <ProtectedRoute path={'/entries'} Component={<Entries />} />
         </Layout>
       )}
     </div>

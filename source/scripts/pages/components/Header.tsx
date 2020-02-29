@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Lock from 'scripts/styles/lock';
 import { Color } from 'scripts/variables';
-import { UserType, RootState } from 'scripts/types';
-import { useSelector } from 'react-redux';
+import { isValidSession } from 'scripts/lib/session';
 
 const Wrapper = styled.header`
   display: block;
@@ -59,16 +58,18 @@ const Wrapper = styled.header`
   }
 `;
 
+const logout = () => console.log('called');
+
 const LoggedIn = () => (
   <nav>
-    <Link to="/groups">
-      <span>Groups</span>
-    </Link>
     <Link to="/entries">
       <span>Entries</span>
     </Link>
-    <button>
+    <Link to="/profile">
       <span>Profile</span>
+    </Link>
+    <button onClick={logout}>
+      <span>Logout</span>
     </button>
   </nav>
 );
@@ -82,10 +83,6 @@ const LoggedOut = () => (
 );
 
 const Header = () => {
-  const user = useSelector<RootState, UserType>(state => state.userState);
-
-  console.log(user);
-
   return (
     <Wrapper>
       <Lock>
@@ -93,7 +90,7 @@ const Header = () => {
           <a href="/">
             <img src="/images/logo.png" aria-hidden />
           </a>
-          {user ? <LoggedIn /> : <LoggedOut />}
+          {isValidSession() ? <LoggedIn /> : <LoggedOut />}
         </div>
       </Lock>
     </Wrapper>

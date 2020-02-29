@@ -8,6 +8,19 @@ const Container = styled.section`
   & h1 {
     margin-bottom: 30px;
     text-align: center;
+    font-size: 22px;
+    font-size: calc(22px + 2vw);
+    text-transform: uppercase;
+  }
+
+  & ${Lock} > p {
+    max-width: 800px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 18px;
+    font-size: calc(18px + 0.2vw);
+    line-height: 1.3em;
   }
 `;
 
@@ -20,9 +33,38 @@ const Row = styled.div`
 const Column = styled.div`
   padding: 20px;
   margin-bottom: 20px;
+  flex: 1;
 
   @media (min-width: 768px) {
     margin-bottom: 0;
+    border-left: 1px solid black;
+  }
+
+  & h2 {
+  }
+
+  & span:first-of-type {
+    display: block;
+    text-align: center;
+    font-size: 22px;
+    font-size: calc(22px + 5vw);
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1em;
+  }
+
+  & span:last-of-type {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    font-size: calc(16px + 0.5vw);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  & li {
+    text-align: center;
+    list-style: none;
   }
 `;
 
@@ -40,28 +82,44 @@ const Rules = () => (
 
     <Row>
       <Column>
-        <p>
-          <span>1 point</span>
-          For picking a player who gets drafted
-        </p>
+        <h2>
+          <span>1</span>
+          <span>point</span>
+        </h2>
+        <ul>
+          <li>player</li>
+        </ul>
       </Column>
       <Column>
-        <p>
-          <span>2 points</span>
-          For picking a player and the selection
-        </p>
+        <h2>
+          <span>2</span>
+          <span>points</span>
+        </h2>
+        <ul>
+          <li>player</li>
+          <li>selection</li>
+        </ul>
       </Column>
       <Column>
-        <p>
-          <span>3 points</span>
-          For picking a player and the team
-        </p>
+        <h2>
+          <span>3</span>
+          <span>points</span>
+        </h2>
+        <ul>
+          <li>player</li>
+          <li>team</li>
+        </ul>
       </Column>
       <Column>
-        <p>
-          <span>4 points</span>
-          For picking a player, the team, and the selection
-        </p>
+        <h2>
+          <span>4</span>
+          <span>points</span>
+        </h2>
+        <ul>
+          <li>player</li>
+          <li>team</li>
+          <li>selection</li>
+        </ul>
       </Column>
     </Row>
   </Container>

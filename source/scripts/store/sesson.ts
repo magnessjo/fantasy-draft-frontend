@@ -2,11 +2,6 @@ import { GlobalStateTypes } from '.';
 
 const key = 'fantasypick';
 
-export const setSession = (value: string) =>
-  sessionStorage.setItem('session', value);
-
-export const getToken = `Bearer ${sessionStorage.getItem('session')}`;
-
 export const getLocalState = () => {
   try {
     const data = localStorage.getItem(key);

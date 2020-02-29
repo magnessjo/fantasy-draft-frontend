@@ -1,11 +1,12 @@
 import { createStore } from 'redux';
-import { ModalTypes, AlertType, UserType } from 'scripts/types';
+import { ModalTypes, AlertType, UserType, SessionType } from 'scripts/types';
 import { getLocalState, saveLocalState } from './sesson';
 
 export type GlobalStateTypes = {
   modalState: ModalTypes;
   alertState: AlertType;
   userState: UserType;
+  sessionState: SessionType;
 };
 
 type Action = {
@@ -17,12 +18,14 @@ const globalState: GlobalStateTypes = {
   modalState: null,
   alertState: null,
   userState: null,
+  sessionState: null,
 };
 
 export const ActionTypes = {
   ADD_MODAL: 'ADD_MODAL',
   ADD_ALERT: 'ADD_ALERT',
   ADD_USER: 'ADD_USER',
+  ADD_SESSION: 'ADD_SESSION',
 };
 
 // Actions
@@ -48,6 +51,13 @@ export const setUserAction = (payload: UserType) => {
   };
 };
 
+export const setSessionAction = (payload: SessionType) => {
+  return {
+    type: ActionTypes.ADD_SESSION,
+    payload: payload,
+  };
+};
+
 // Reducer
 
 export function rootReducer(state = globalState, action: Action) {
@@ -66,6 +76,12 @@ export function rootReducer(state = globalState, action: Action) {
   if (action.type === ActionTypes.ADD_USER) {
     return Object.assign({}, state, {
       userState: action.payload,
+    });
+  }
+
+  if (action.type === ActionTypes.ADD_SESSION) {
+    return Object.assign({}, state, {
+      sessionState: action.payload,
     });
   }
   return state;

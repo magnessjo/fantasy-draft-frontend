@@ -18,6 +18,12 @@ export type AlertType = Maybe<{
 export type UserType = Maybe<{
   first_name: string;
   username: string;
+  token: string;
+  expires: number;
+}>;
+
+export type SessionType = Maybe<{
+  time: Date;
 }>;
 
 export type RootState = ReturnType<typeof rootReducer>;

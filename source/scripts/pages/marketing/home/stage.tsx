@@ -6,6 +6,7 @@ import { CTAStyles } from 'scripts/styles/call-to-action';
 import { Color } from 'scripts/variables';
 import { useSelector } from 'react-redux';
 import { RootState, UserType } from 'scripts/types';
+import { isValidSession } from 'scripts/lib/session';
 
 const Stage = styled.section`
   position: relative;
@@ -159,7 +160,11 @@ const Home = () => {
       </video>
       <div>
         <Lock>
-          {user ? <LoggedIn user={user.first_name} /> : <LoggedOut />}
+          {isValidSession() && user ? (
+            <LoggedIn user={user.first_name} />
+          ) : (
+            <LoggedOut />
+          )}
         </Lock>
       </div>
     </Stage>

@@ -7,6 +7,7 @@ import { setModalAction } from 'scripts/store';
 import Input, { FormInputs } from './shared/input';
 import UserForm, { FormStateTypes } from './shared/form';
 import { InputSubmit } from './shared/styles';
+import { GraphQLError } from 'graphql';
 import {
   RegisterUserMutation,
   RegisterUserMutationVariables,
@@ -28,6 +29,21 @@ const initialFormState = {
   email: '',
   username: '',
   password: '',
+};
+
+const makeErrorMessage = (error: Readonly<GraphQLError[]>) => {
+  const validations = error.map(obj => obj?.extensions?.validation);
+  const messages = validations.map(validation => {
+    if (validation['input.email']) {
+      return 'The email that you have entered is not valid.  Please select another email.';
+    }
+
+    if (validation['input.username']) {
+      return 'The username that you have entered is not valid.  Please select another username.';
+    }
+  });
+
+  return messages ?? [];
 };
 
 const Register = () => {
@@ -72,8 +88,8 @@ const Register = () => {
     <UserForm
       initalFormValue={initialFormState}
       successfulForm={formSumit}
-      error={error}
       loading={loading}
+      errorMessage={error && makeErrorMessage(error.graphQLErrors)}
     >
       {({ formState, setFormState }: FormStateTypes) => {
         return (
