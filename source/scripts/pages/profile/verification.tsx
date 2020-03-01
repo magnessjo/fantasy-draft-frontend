@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import gql from 'graphql-tag';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { useMutation } from '@apollo/react-hooks';
 import Loader from 'scripts/styles/loader';
@@ -21,22 +21,17 @@ const VERIFY_EMAIL = gql`
 
 const EmailVerification = () => {
   const history = useHistory();
-  const strings = queryString.parse(location.search);
+  const location = useLocation();
+  const { token } = queryString.parse(location.search);
   const [verifyEmail, { error, loading, data }] = useMutation<
     VerifyEmailMutation,
     VerifyEmailMutationVariables
   >(VERIFY_EMAIL);
 
-  if (data?.verifyEmail?.access_token) {
-    history.push('/login');
-  }
-
   useEffect(() => {
-    if (strings.token) {
-      const token = Array.isArray(strings.token)
-        ? strings.token[0]
-        : strings.token;
+    // Mutation
 
+    if (typeof token === 'string') {
       verifyEmail({
         variables: {
           input: {
@@ -45,7 +40,13 @@ const EmailVerification = () => {
         },
       });
     }
-  }, []);
+
+    // Sucess
+
+    if (data?.verifyEmail?.access_token) {
+      history.push('/login');
+    }
+  }, [data]);
 
   const close = () => history.push('/');
 
@@ -53,6 +54,7 @@ const EmailVerification = () => {
     <BlueBackground>
       <CenteredDivWithLogo>
         <img src="/images/logo.png" aria-hidden />
+        {loading && <Loader />}
         {error && <Error errorCodes={error} close={close} />}
         {!error && (
           <div>

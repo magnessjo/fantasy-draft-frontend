@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Loader from 'scripts/styles/loader';
 import { FormInputs } from './input';
 import { validate } from 'scripts/lib/form';
-import { BlueBackground, CenteredDivWithLogo } from './styles';
+import { BlueBackground, CenteredDivWithLogo, ChildrenWrapper } from './styles';
 import { Maybe } from 'scripts/types';
 
 export type FormStateTypes = {
@@ -53,7 +53,6 @@ const Errors = ({ error }: { error?: ErrorMessageTypes }) => {
               return <ErrorText>{errorMessage}</ErrorText>;
             }
           })}
-          ;
         </React.Fragment>
       );
     }
@@ -61,16 +60,6 @@ const Errors = ({ error }: { error?: ErrorMessageTypes }) => {
 
   return null;
 };
-
-const ChildrenWrapper = styled.div<{
-  styles: {
-    paddingTop: string;
-  };
-}>`
-  ${({ styles }) => `
-    ${styles && styles.paddingTop && `padding-top: ${styles.paddingTop}`};
-  `}
-`;
 
 const UserForm = ({
   children,
@@ -118,15 +107,23 @@ const UserForm = ({
 
   return (
     <BlueBackground>
-      <CenteredDivWithLogo as={'form'} onSubmit={formSubmit} ref={formElement}>
-        <img src="/images/logo.png" aria-hidden />
-        <ChildrenWrapper styles={styleAdjustments}>
-          {children({ formState, setFormState })}
-        </ChildrenWrapper>
-        {errorMessage && <Errors error={errorMessage} />}
-        {successMessage && <SuccessText>{successMessage}</SuccessText>}
-        {loading && <Loader />}
-      </CenteredDivWithLogo>
+      <div>
+        <CenteredDivWithLogo
+          as={'form'}
+          onSubmit={formSubmit}
+          ref={formElement}
+          autoComplete="off"
+          method="post"
+        >
+          <img src="/images/logo.png" aria-hidden />
+          <ChildrenWrapper styles={styleAdjustments}>
+            {children({ formState, setFormState })}
+          </ChildrenWrapper>
+          {errorMessage && <Errors error={errorMessage} />}
+          {successMessage && <SuccessText>{successMessage}</SuccessText>}
+          {loading && <Loader />}
+        </CenteredDivWithLogo>
+      </div>
     </BlueBackground>
   );
 };

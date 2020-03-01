@@ -19,9 +19,12 @@ type InputProps = FormStateTypes & {
   name: string;
   placeholder?: string;
   label: string;
+  helpText?: string;
 };
 
-const InputLabel = styled.label`
+const InputLabel = styled.label.attrs((props: { htmlFor: string }) => ({
+  htmlFor: props.htmlFor,
+}))`
   color: black;
   font-size: 13px;
   font-size: 10px;
@@ -35,6 +38,10 @@ const InputLabel = styled.label`
 
 const InputWrapper = styled.div`
   margin-bottom: 20px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 
   &[data-valid='true'] {
     & input {
@@ -57,6 +64,13 @@ const InputWrapper = styled.div`
   }
 `;
 
+const HelpText = styled.p`
+  font-size: 12px;
+  text-align: left;
+  color: red;
+  padding-top: 5px;
+`;
+
 const Input = ({
   type = 'input',
   placeholder,
@@ -64,6 +78,7 @@ const Input = ({
   label,
   formState,
   setFormState,
+  helpText,
 }: InputProps) => {
   const [isActive, setIsActive] = useState(true);
   const value = formState[name as InputKeys];
@@ -78,16 +93,20 @@ const Input = ({
     return setFormState({ ...formState, [name]: event.currentTarget.value });
   };
 
-  const focus = () => setIsActive(true);
+  const focus = () => {
+    setIsActive(true);
+  };
 
   const validateValue =
     typeof value === 'string' ? validate(type, value) : null;
+
   const isValid = isActive ? null : validateValue;
 
   return (
     <InputWrapper data-valid={isValid}>
-      <InputLabel>{label}</InputLabel>
+      <InputLabel htmlFor={name}>{label}</InputLabel>
       <input
+        id={name}
         type={type}
         name={name}
         placeholder={placeholder}
@@ -95,6 +114,7 @@ const Input = ({
         onBlur={blur}
         onFocus={focus}
       />
+      {helpText && isValid === false && <HelpText>{helpText}</HelpText>}
     </InputWrapper>
   );
 };

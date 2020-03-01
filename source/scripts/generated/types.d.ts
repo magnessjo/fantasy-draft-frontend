@@ -72,9 +72,9 @@ export type Mutation = {
   verifyEmail: AuthPayload,
   login: AuthPayload,
   forgotPassword: ForgotPasswordResponse,
+  updateForgottenPassword: ForgotPasswordResponse,
   refreshToken: RefreshTokenPayload,
   logout: LogoutResponse,
-  updateForgottenPassword: ForgotPasswordResponse,
 };
 
 
@@ -98,13 +98,13 @@ export type MutationForgotPasswordArgs = {
 };
 
 
-export type MutationRefreshTokenArgs = {
-  input?: Maybe<RefreshTokenInput>
+export type MutationUpdateForgottenPasswordArgs = {
+  input?: Maybe<NewPasswordWithCodeInput>
 };
 
 
-export type MutationUpdateForgottenPasswordArgs = {
-  input?: Maybe<NewPasswordWithCodeInput>
+export type MutationRefreshTokenArgs = {
+  input?: Maybe<RefreshTokenInput>
 };
 
 export type NewPasswordWithCodeInput = {
@@ -243,6 +243,11 @@ export type VerifyEmailInput = {
   token: Scalars['String'],
 };
 
+export type LogoutMutationVariables = {};
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'LogoutResponse', status: string, message: Maybe<string> } };
+
 export type AthleteDataFragment = { __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string };
 
 export type FetchAthletesQueryVariables = {
@@ -289,6 +294,13 @@ export type LoginMutationVariables = {
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', access_token: Maybe<string>, expires_in: Maybe<number>, user: Maybe<{ __typename?: 'User', first_name: string, username: string }> } };
+
+export type UpdateForgottenPasswordMutationVariables = {
+  input: NewPasswordWithCodeInput
+};
+
+
+export type UpdateForgottenPasswordMutation = { __typename?: 'Mutation', updateForgottenPassword: { __typename?: 'ForgotPasswordResponse', status: string, message: Maybe<string> } };
 
 export type RegisterUserMutationVariables = {
   input: RegisterInput

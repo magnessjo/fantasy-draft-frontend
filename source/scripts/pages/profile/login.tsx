@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
@@ -36,38 +36,40 @@ const Login = () => {
     LoginMutationVariables
   >(CREATE_USER);
 
-  if (data) {
-    const loginData = data?.login;
-    const user = loginData?.user;
-    const token = loginData?.access_token;
-    const expires = loginData?.expires_in;
+  useEffect(() => {
+    if (data) {
+      const loginData = data?.login;
+      const user = loginData?.user;
+      const token = loginData?.access_token;
+      const expires = loginData?.expires_in;
 
-    if (token && expires && user) {
-      dispatch(
-        setUserAction({
-          first_name: user.first_name,
-          username: user.username,
-          token,
-          expires,
-        }),
-      );
+      if (token && expires && user) {
+        dispatch(
+          setUserAction({
+            first_name: user.first_name,
+            username: user.username,
+          }),
+        );
 
-      dispatch(
-        setAlertAction({
-          type: 'notice',
-          text: 'You have been logged in',
-        }),
-      );
+        dispatch(
+          setAlertAction({
+            type: 'notice',
+            text: 'You have been logged in',
+          }),
+        );
 
-      dispatch(
-        setSessionAction({
-          time: getSessionTime(),
-        }),
-      );
+        dispatch(
+          setSessionAction({
+            time: getSessionTime(),
+            token,
+            expires,
+          }),
+        );
+      }
+
+      history.push('/');
     }
-
-    history.push('/');
-  }
+  }, [data, dispatch, history]);
 
   const formSumit = ({ username, password }: FormInputs) => {
     if (username && password) {
@@ -78,8 +80,6 @@ const Login = () => {
       });
     }
   };
-
-  console.log(error);
 
   return (
     <UserForm
@@ -100,6 +100,7 @@ const Login = () => {
               label="email"
               formState={formState}
               setFormState={setFormState}
+              helpText={"The email doesn't appear correct"}
             />
 
             <Input

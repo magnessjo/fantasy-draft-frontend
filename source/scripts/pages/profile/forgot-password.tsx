@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
@@ -9,6 +9,8 @@ import {
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables,
 } from 'scripts/generated/types';
+import { useDispatch } from 'react-redux';
+import { setModalAction } from 'scripts/store';
 
 const initialFormState = {
   email: '',
@@ -29,14 +31,26 @@ const FORGOT_PASSWORD = gql`
 
 const ForgotPassword = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [submitUser, { error, loading, data }] = useMutation<
     ForgotPasswordMutation,
     ForgotPasswordMutationVariables
   >(FORGOT_PASSWORD);
 
-  if (data) {
-    history.push('/');
-  }
+  useEffect(() => {
+    if (data?.forgotPassword?.status === 'EMAIL_SENT') {
+      dispatch(
+        setModalAction({
+          headlineText: {
+            headline: `Action Required`,
+            text: 'An email has been sent to the email address you entered',
+          },
+        }),
+      );
+
+      history.push('/');
+    }
+  }, [data, dispatch, history]);
 
   const formSumit = ({ email }: FormInputs) => {
     if (email) {
@@ -48,17 +62,11 @@ const ForgotPassword = () => {
     }
   };
 
-  const successText =
-    data?.forgotPassword?.status === 'EMAIL_SENT'
-      ? data?.forgotPassword?.message
-      : undefined;
-
   return (
     <UserForm
       initalFormValue={initialFormState}
       successfulForm={formSumit}
       loading={loading}
-      successMessage={successText}
       styleAdjustments={styles}
     >
       {({ formState, setFormState }: FormStateTypes) => {
@@ -71,6 +79,7 @@ const ForgotPassword = () => {
               label="email"
               formState={formState}
               setFormState={setFormState}
+              helpText={"The email doesn't appear correct"}
             />
 
             <InputSubmit />

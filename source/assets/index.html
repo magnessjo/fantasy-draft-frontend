@@ -3,11 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Fantasy Draft</title>
 
-<link href="https://fonts.googleapis.com/css?family=Lato:400,700|Playfair+Display:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Playfair+Display:400,700&display=swap" rel="stylesheet">
     <style>
       :root {
         font-family: 'Lato', sans-serif;;
@@ -21,7 +21,7 @@
         box-sizing: border-box;
       }
 
-      body {
+      html, body {
         overscroll-behavior: none;
       }
 
@@ -68,6 +68,11 @@
         font-weight: 300;
       }
 
+      input[type="submit"] {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+      }
+
       input[type='text'],
       input[type='email'],
       input[type='password'],
@@ -79,6 +84,8 @@
         border: none;
         border: 1px solid #d3d3d3;
         padding: 0 10px;
+        -moz-appearance: none;
+        -webkit-appearance: none;
       }
 
       input::placeholder,
@@ -93,6 +100,6 @@
       <div id="app"></div>
     </main>
 
-    <script src="app.js"></script>
+    <script src="/app.js"></script>
   </body>
 </html>

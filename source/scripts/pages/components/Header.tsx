@@ -1,18 +1,39 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Lock from 'scripts/styles/lock';
 import { Color } from 'scripts/variables';
 import { isValidSession } from 'scripts/lib/session';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
+import {
+  LogoutMutation,
+  LogoutMutationVariables,
+} from 'scripts/generated/types';
+import { useDispatch } from 'react-redux';
+import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
+
+const LOGOUT = gql`
+  mutation logout {
+    logout {
+      status
+      message
+    }
+  }
+`;
 
 const Wrapper = styled.header`
   display: block;
-  height: 80px;
+  height: 60px;
   position: fixed;
   width: 100%;
   z-index: 9;
   background-color: white;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    height: 80px;
+  }
 
   & ${Lock} {
     padding-right: 0;
@@ -38,10 +59,15 @@ const Wrapper = styled.header`
     height: 100%;
 
     & > * {
-      padding: 0 20px;
+      padding: 0 10px;
       height: 100%;
       display: flex;
       align-items: center;
+      font-size: 14px;
+
+      @media (min-width: 768px) {
+        padding: 0 20px;
+      }
     }
 
     & a:hover {
@@ -58,21 +84,44 @@ const Wrapper = styled.header`
   }
 `;
 
-const logout = () => console.log('called');
+const LoggedIn = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [logoutAction, { error, loading, data }] = useMutation<
+    LogoutMutation,
+    LogoutMutationVariables
+  >(LOGOUT);
 
-const LoggedIn = () => (
-  <nav>
-    <Link to="/entries">
-      <span>Entries</span>
-    </Link>
-    <Link to="/profile">
-      <span>Profile</span>
-    </Link>
-    <button onClick={logout}>
-      <span>Logout</span>
-    </button>
-  </nav>
-);
+  useEffect(() => {
+    if (data?.logout?.status === 'TOKEN_REVOKED') {
+      dispatch(
+        setAlertAction({
+          type: 'notice',
+          text: 'You have been logged out',
+        }),
+      );
+
+      dispatch(setUserAction(null));
+      dispatch(setSessionAction(null));
+
+      history.push('/');
+    }
+  }, [data]);
+
+  return (
+    <nav>
+      <Link to="/entries">
+        <span>Entries</span>
+      </Link>
+      <Link to="/profile">
+        <span>Profile</span>
+      </Link>
+      <button onClick={() => logoutAction()}>
+        <span>Logout</span>
+      </button>
+    </nav>
+  );
+};
 
 const LoggedOut = () => (
   <nav>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, useLocation, Redirect } from 'react-router-dom';
+import { Route, useLocation, Redirect, Switch } from 'react-router-dom';
 import { isValidSession } from 'scripts/lib/session';
 
 // Pages
@@ -14,6 +14,7 @@ import Register from './profile/register';
 import Login from './profile/login';
 import ForgotPassword from './profile/forgot-password';
 import EmailVerification from './profile/verification';
+import PasswordReset from './profile/password-reset';
 
 // Components
 
@@ -21,10 +22,13 @@ import Header from './components/header';
 import Modal from './components/modal';
 import Alert from './components/alert';
 import styled from 'styled-components';
-import { setSessionAction } from 'scripts/store';
 
 const PageWrapper = styled.div`
-  padding-top: 80px;
+  padding-top: 60px;
+
+  @media (min-width: 768px) {
+    padding-top: 80px;
+  }
 `;
 
 const Layout = ({
@@ -50,16 +54,27 @@ const ProtectedRoute = ({
   return (
     <Route
       path={path}
+      exact
       render={() => (validSession ? Component : <Redirect to="/login" />)}
     />
   );
 };
 
+// To Do : Make 404 page
+
+const NoMatch = () => (
+  <div>
+    <p>No page found</p>
+    <p>404 page coming soon...</p>
+  </div>
+);
+
 const nonHeaderPaths = [
   '/register',
   '/login',
-  '/verification',
+  '/email-verify',
   '/forgotten-password',
+  '/password/reset',
 ];
 const checkHeaderPaths = (path: string) =>
   nonHeaderPaths.find(nonPath => nonPath === path);
@@ -67,19 +82,26 @@ const checkHeaderPaths = (path: string) =>
 const Router = () => {
   const location = useLocation();
 
+  // To Do : Clean up routes
+
   return (
     <div>
       <Modal />
       <Alert />
+
+      <Route path="/password/:token" exact render={() => <PasswordReset />} />
       <Route path="/register" render={() => <Register />} />
       <Route path="/login" render={() => <Login />} />
-      <Route path="/verification" render={() => <EmailVerification />} />
+      <Route path="/email-verify" render={() => <EmailVerification />} />
       <Route path="/forgotten-password" render={() => <ForgotPassword />} />
       {!checkHeaderPaths(location.pathname) && (
         <Layout>
-          <Route path="/" exact={true} render={() => <Home />} />
-          <ProtectedRoute path={'/profile'} Component={<Profile />} />
-          <ProtectedRoute path={'/entries'} Component={<Entries />} />
+          <Switch>
+            <ProtectedRoute path="/profile" Component={<Profile />} />
+            <ProtectedRoute path="/entries" Component={<Entries />} />
+            <Route path="/" exact render={() => <Home />} />
+            <Route component={NoMatch} />
+          </Switch>
         </Layout>
       )}
     </div>

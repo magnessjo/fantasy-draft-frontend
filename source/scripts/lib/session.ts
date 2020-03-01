@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, SessionType } from 'scripts/types';
+import { RootState, SessionType, UserType } from 'scripts/types';
 import { setSessionAction, setAlertAction } from 'scripts/store';
+import { useEffect } from 'react';
 
 export const isValidSession = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,8 @@ export const isValidSession = () => {
       dispatch(
         setSessionAction({
           time: getSessionTime(),
+          token: session.token,
+          expires: session.expires,
         }),
       );
     }
@@ -31,12 +34,16 @@ export const isValidSession = () => {
 
   // Not Valid
 
-  dispatch(
-    setAlertAction({
-      type: 'notice',
-      text: 'You session has expired. Please login for your security.',
-    }),
-  );
+  useEffect(() => {
+    if (session?.token) {
+      dispatch(
+        setAlertAction({
+          type: 'notice',
+          text: 'You session has expired. Please login for your security.',
+        }),
+      );
+    }
+  }, [session, sessionDate]);
 
   dispatch(setSessionAction(null));
 

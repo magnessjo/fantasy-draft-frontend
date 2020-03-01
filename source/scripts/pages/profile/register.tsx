@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
@@ -54,19 +54,25 @@ const Register = () => {
     RegisterUserMutationVariables
   >(CREATE_USER);
 
-  if (data) {
-    history.push('/');
+  // Succcessful
 
-    dispatch(
-      setModalAction({
-        headlineText: {
-          headline: `Action Required`,
-          text:
-            'You are one step away from joining the coolest draft game that the author of this website is aware of.  Please check the email that you used to signup for a validation email.  Once your email is validated, you can start making your draft entries and inviting your friends to compete for the prize of being right.',
-        },
-      }),
-    );
-  }
+  useEffect(() => {
+    if (data?.register?.status === 'MUST_VERIFY_EMAIL') {
+      dispatch(
+        setModalAction({
+          headlineText: {
+            headline: `Action Required`,
+            text:
+              'You are one step away from joining the coolest draft game that the author of this website is aware of.  Please check the email that you used to signup for a validation email.  Once your email is validated, you can start making your draft entries and inviting your friends to compete for the prize of being right.',
+          },
+        }),
+      );
+
+      history.push('/');
+    }
+  }, [dispatch, data, history]);
+
+  // Mutation
 
   const formSumit = ({
     username,
@@ -128,6 +134,7 @@ const Register = () => {
               label="email"
               formState={formState}
               setFormState={setFormState}
+              helpText={'Email must be valid. Example: bob@gmail.com'}
             />
 
             <Input
@@ -137,16 +144,19 @@ const Register = () => {
               label="password"
               formState={formState}
               setFormState={setFormState}
+              helpText={
+                'Password must be at least 8 characters and contain 1 special character. Example: fu$kshi$'
+              }
             />
 
-            <p>
+            <p className="disclaimer">
               By click join now, you agree to Draft Clash's User Agreement and
               Privacy Policy.
             </p>
 
             <InputSubmit value={'Join Now'} />
             <p>
-              Already a member? <Link to="/">Sign In</Link>
+              Already a member? <Link to="/login">Sign In</Link>
             </p>
           </React.Fragment>
         );

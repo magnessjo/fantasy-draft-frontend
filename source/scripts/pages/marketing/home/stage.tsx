@@ -28,7 +28,8 @@ const Stage = styled.section`
   }
 
   & ${Lock} {
-    padding: 20px 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
     min-height: calc(90vh - 80px);
     display: flex;
     align-items: center;
@@ -47,11 +48,11 @@ const Stage = styled.section`
         content: '';
         position: absolute;
         left: 50%;
-        right: 50%;
+        top: 50%;
         transform: translate(-50%, -50%);
         border-radius: 50%;
         background-color: black;
-        padding: 100vw;
+        padding: 150vh;
         height: 100px;
         width: 100px;
         background: radial-gradient(
@@ -59,6 +60,10 @@ const Stage = styled.section`
           rgba(255, 255, 255, 0.4) 50%,
           rgba(255, 255, 255, 0) 70%
         );
+
+        @media (min-width: 768px) {
+          padding: 100vh;
+        }
       }
 
       & > * {
@@ -84,7 +89,7 @@ const Stage = styled.section`
     font-weight: 700;
     letter-spacing: 10px;
     font-size: 40px;
-    font-size: calc(40px + 3vw);
+    font-size: calc(18px + 4vw);
     line-height: 1em;
     text-transform: uppercase;
     margin-bottom: 10px;
@@ -93,17 +98,21 @@ const Stage = styled.section`
   & h2 {
     font-family: 'Playfair Display', serif;
     font-size: 20px;
-    font-size: calc(18px + 0.75vw);
+    font-size: calc(16px + 0.25vw);
     margin-bottom: 20px;
     letter-spacing: 5px;
     text-transform: capitalize;
   }
 
   & p {
-    font-size: 18px;
+    font-size: 16px;
     max-width: 450px;
     line-height: 1.3em;
     margin: 0 auto;
+
+    @media (min-width: 768px) {
+      font-size: 18px;
+    }
 
     &:last-of-type {
       margin-bottom: 0;

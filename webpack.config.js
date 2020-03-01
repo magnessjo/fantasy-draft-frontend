@@ -6,26 +6,27 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = env => {
+  const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+  }, {});
+
   var plugins = [
     new CopyWebpackPlugin([
       { from: 'images/**/*', to: '', context: 'source/assets/' },
       { from: 'videos/**/*', to: '', context: 'source/assets/' },
       { from: 'index.html', to: '', context: 'source/assets/' },
     ]),
-    new webpack.DefinePlugin({
-      PRODUCTION:
-        env.NODE_ENV == 'production'
-          ? JSON.stringify(true)
-          : JSON.stringify(false),
-    }),
+
+    new webpack.DefinePlugin(envKeys),
   ];
 
   if (env.NODE_ENV == 'production') {
-    plugins.push(
-      new UglifyJsPlugin({
-        test: /\.js($|\?)/i,
-      }),
-    );
+    // plugins.push(
+    //   new UglifyJsPlugin({
+    //     test: /\.js($|\?)/i,
+    //   }),
+    // );
   }
 
   return {
