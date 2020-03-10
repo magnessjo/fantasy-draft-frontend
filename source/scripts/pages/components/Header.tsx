@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import styled from 'styled-components';
-import { Lock } from 'scripts/styles/lock';
-import { Color } from 'scripts/variables';
-import { isValidSession } from 'scripts/lib/session';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
+import { isValidSession } from 'scripts/lib/session';
+import { Lock } from 'scripts/styles/lock';
+import { Color, Breakpoints } from 'scripts/variables';
 import {
   LogoutMutation,
   LogoutMutationVariables,
 } from 'scripts/generated/types';
-import { useDispatch } from 'react-redux';
-import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
 
 const LOGOUT = gql`
   mutation logout {
@@ -31,7 +31,7 @@ const Wrapper = styled.header`
   background-color: white;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 
-  @media (min-width: 768px) {
+  @media (min-width: ${Breakpoints.largeMin}px) {
     height: 80px;
   }
 
@@ -65,7 +65,7 @@ const Wrapper = styled.header`
       align-items: center;
       font-size: 14px;
 
-      @media (min-width: 768px) {
+      @media (min-width: ${Breakpoints.largeMin}px) {
         padding: 0 20px;
       }
     }

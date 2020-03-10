@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setModalAction } from 'scripts/store';
 import { CTAStyles } from 'scripts/styles/call-to-action';
 import { LargeFont } from 'scripts/styles/fonts';
-import { Color } from 'scripts/variables';
+import { Color, Breakpoints } from 'scripts/variables';
 import { RootState, ModalTypes, ModalHeadlineTextType } from 'scripts/types';
 
 const CloseWrapper = styled.div<{
@@ -33,7 +33,7 @@ const Container = styled.div`
   position: relative;
   text-align: center;
 
-  @media (min-width: 768px) {
+  @media (min-width: ${Breakpoints.largeMin}px) {
     padding: 40px;
   }
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { isValidSession } from 'scripts/lib/session';
 import { Lock } from 'scripts/styles/lock';
 import { CTAStyles } from 'scripts/styles/call-to-action';
-import { Color } from 'scripts/variables';
-import { useSelector } from 'react-redux';
+import { Color, Breakpoints } from 'scripts/variables';
 import { RootState, UserType } from 'scripts/types';
-import { isValidSession } from 'scripts/lib/session';
 
 const Container = styled.section`
   position: relative;
@@ -37,7 +37,7 @@ const Container = styled.section`
     position: relative;
     text-align: center;
 
-    @media (min-width: 768px) {
+    @media (min-width: ${Breakpoints.largeMin}px) {
       padding: 50px 0;
     }
 
@@ -61,7 +61,7 @@ const Container = styled.section`
           rgba(255, 255, 255, 0) 70%
         );
 
-        @media (min-width: 768px) {
+        @media (min-width: ${Breakpoints.largeMin}px) {
           padding: 100vh;
         }
       }
@@ -110,7 +110,7 @@ const Container = styled.section`
     line-height: 1.3em;
     margin: 0 auto;
 
-    @media (min-width: 768px) {
+    @media (min-width: ${Breakpoints.largeMin}px) {
       font-size: 18px;
     }
 

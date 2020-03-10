@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Lock } from 'scripts/styles/lock';
+import { Breakpoints } from 'scripts/variables';
 
 const Container = styled.section`
   padding: 40px 0;
@@ -25,7 +26,7 @@ const Container = styled.section`
 `;
 
 const Row = styled.div`
-  @media (min-width: 768px) {
+  @media (min-width: ${Breakpoints.largeMin}px) {
     display: flex;
   }
 `;
@@ -35,7 +36,7 @@ const Column = styled.div`
   margin-bottom: 20px;
   flex: 1;
 
-  @media (min-width: 768px) {
+  @media (min-width: ${Breakpoints.largeMin}px) {
     margin-bottom: 0;
     border-left: 1px solid black;
   }
