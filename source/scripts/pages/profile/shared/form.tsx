@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
+import { validate } from 'scripts/lib/form';
 import { Loader } from 'scripts/styles/loader';
 import { FormInputs } from './input';
-import { validate } from 'scripts/lib/form';
 import { BlueBackground, CenteredDivWithLogo, ChildrenWrapper } from './styles';
 import { Maybe } from 'scripts/types';
 

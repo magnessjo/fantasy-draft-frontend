@@ -22,6 +22,7 @@ const CREATE_USER = gql`
       expires_in
       user {
         first_name
+        last_name
         username
       }
     }
@@ -47,6 +48,7 @@ export const Login = () => {
         dispatch(
           setUserAction({
             first_name: user.first_name,
+            last_name: user.last_name,
             username: user.username,
           }),
         );
@@ -95,6 +97,7 @@ export const Login = () => {
           <React.Fragment>
             <Input
               type="email"
+              validateType="email"
               placeholder="johnnyu4life@gmail.com"
               name="username"
               label="email"
@@ -105,6 +108,7 @@ export const Login = () => {
 
             <Input
               type="password"
+              validateType="password"
               placeholder=""
               name="password"
               label="password"

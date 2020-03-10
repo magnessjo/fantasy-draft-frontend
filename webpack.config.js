@@ -16,6 +16,7 @@ module.exports = env => {
       { from: 'images/**/*', to: '', context: 'source/assets/' },
       { from: 'videos/**/*', to: '', context: 'source/assets/' },
       { from: 'index.html', to: '', context: 'source/assets/' },
+      { from: 'fonts.css', to: '', context: 'source/assets/' },
     ]),
 
     new webpack.DefinePlugin(envKeys),

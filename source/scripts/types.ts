@@ -17,6 +17,7 @@ export type AlertType = Maybe<{
 
 export type UserType = Maybe<{
   first_name: string;
+  last_name: string;
   username: string;
 }>;
 

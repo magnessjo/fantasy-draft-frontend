@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import styled from 'styled-components';
-import { Lock } from 'scripts/styles/lock';
-import { Color } from 'scripts/variables';
-import { isValidSession } from 'scripts/lib/session';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
+import { isValidSession } from 'scripts/lib/session';
+import { Lock } from 'scripts/styles/lock';
+import { Color, Breakpoints } from 'scripts/variables';
 import {
   LogoutMutation,
   LogoutMutationVariables,
 } from 'scripts/generated/types';
-import { useDispatch } from 'react-redux';
-import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
 
 const LOGOUT = gql`
   mutation logout {
@@ -24,31 +24,28 @@ const LOGOUT = gql`
 
 const Wrapper = styled.header`
   display: block;
-  height: 60px;
+  height: 65px;
   position: fixed;
   width: 100%;
-  z-index: 9;
-  background-color: white;
+  z-index: 999;
+  background-color: rgba(255, 255, 255, 0.95);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 
-  @media (min-width: 768px) {
-    height: 80px;
-  }
-
-  & ${Lock} {
+  & > ${Lock} {
     padding-right: 0;
-    width: 100%;
-    max-width: 100%;
   }
 
   & .header-layout {
     display: flex;
     align-items: center;
     height: 100%;
+    position: relative;
 
     & > a {
-      height: 80%;
+      position: absolute;
       display: block;
+      top: 5px;
+      height: 88px;
     }
   }
 
@@ -64,8 +61,10 @@ const Wrapper = styled.header`
       display: flex;
       align-items: center;
       font-size: 14px;
+      letter-spacing: 1px;
+      font-weight: 400;
 
-      @media (min-width: 768px) {
+      @media (min-width: ${Breakpoints.largeMin}px) {
         padding: 0 20px;
       }
     }
@@ -76,11 +75,13 @@ const Wrapper = styled.header`
   }
 
   & .login {
-    font-weight: 700;
-    background-color: ${Color.blue};
-    padding: 10px 20px;
-    letter-spacing: 0.5px;
-    color: ${Color.white};
+    position: relative;
+
+    @media (max-width: 1199px) {
+      background-color: ${Color.darkBlue};
+      padding: 10px 15px;
+      color: ${Color.white};
+    }
   }
 `;
 

@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { isValidSession } from 'scripts/lib/session';
 import { Lock } from 'scripts/styles/lock';
 import { CTAStyles } from 'scripts/styles/call-to-action';
-import { Color } from 'scripts/variables';
-import { useSelector } from 'react-redux';
+import {
+  LargeSansFont,
+  XLargeSerifFont,
+  MediumSansFont,
+} from 'scripts/styles/fonts';
+import { Breakpoints, Color } from 'scripts/variables';
 import { RootState, UserType } from 'scripts/types';
-import { isValidSession } from 'scripts/lib/session';
 
 const Container = styled.section`
   position: relative;
@@ -37,12 +42,16 @@ const Container = styled.section`
     position: relative;
     text-align: center;
 
-    @media (min-width: 768px) {
+    @media (min-width: ${Breakpoints.largeMin}px) {
       padding: 50px 0;
     }
 
     & > div {
       position: relative;
+
+      @media (min-width: ${Breakpoints.largeMin}px) {
+        margin-top: 30px;
+      }
 
       &:before {
         content: '';
@@ -52,16 +61,17 @@ const Container = styled.section`
         transform: translate(-50%, -50%);
         border-radius: 50%;
         background-color: black;
-        padding: 150vh;
-        height: 100px;
-        width: 100px;
+        padding: 160vh;
+        height: 200px;
+        width: 200px;
         background: radial-gradient(
           rgba(255, 255, 255, 1) 0,
-          rgba(255, 255, 255, 0.4) 50%,
-          rgba(255, 255, 255, 0) 70%
+          rgba(255, 255, 255, 0.8) 30%,
+          rgba(255, 255, 255, 0.3) 60%,
+          rgba(255, 255, 255, 0) 90%
         );
 
-        @media (min-width: 768px) {
+        @media (min-width: ${Breakpoints.largeMin}px) {
           padding: 100vh;
         }
       }
@@ -83,69 +93,60 @@ const Container = styled.section`
     transform: translate(-50%, -50%);
   }
 
-  & h1 {
-    font-family: 'Playfair Display', serif;
-    text-shadow: 1px 1px rgba(255, 255, 255, 0.6);
-    font-weight: 700;
-    letter-spacing: 10px;
-    font-size: 40px;
-    font-size: calc(18px + 4vw);
-    line-height: 1em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  & h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-size: calc(16px + 0.25vw);
-    margin-bottom: 20px;
-    letter-spacing: 5px;
-    text-transform: capitalize;
-  }
-
   & p {
     font-size: 16px;
     max-width: 450px;
     line-height: 1.3em;
     margin: 0 auto;
-
-    @media (min-width: 768px) {
-      font-size: 18px;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+    margin-bottom: 20px;
   }
 `;
 
 const SignUpButton = styled(Link)`
   ${CTAStyles}
-  display: inline-block;
-  margin-top: 20px;
-  text-transform: uppercase;
-  background-color: ${Color.black};
-  color: ${Color.white};
-  letter-spacing: 2px;
-
-  &:hover {
-    background-color: ${Color.hoverBlack};
-  }
+  margin-top: 0;
+  min-width: 240px;
+  letter-spacing: 1px;
 `;
 
-const LoggedIn = ({ user }: { user: string }) => (
+const Headline = styled.h1`
+  ${XLargeSerifFont}
+  margin-bottom: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: ${Color.fontBlue};
+`;
+
+const LargeText = styled.h1`
+  ${LargeSansFont}
+  margin-bottom: 20px;
+  text-transform: capitalize;
+  max-width: 500px;
+  text-align: center;
+  line-height: 1.3em;
+  font-weight: 700;
+  color: ${Color.fontBlue};
+`;
+
+const MediumText = styled.h2`
+  ${MediumSansFont}
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  font-weight: 700;
+  color: ${Color.fontBlue};
+`;
+
+const LoggedIn = () => (
   <div>
-    <h1>Hello {user}, </h1>
-    <h2>Welcome to best draft game on the internet!</h2>
-    <SignUpButton to="/entries">Select your Entries</SignUpButton>
+    <LargeText>Welcome to best draft game on the internet!</LargeText>
+    <SignUpButton to="/entries">Create an Entry</SignUpButton>
   </div>
 );
 
 const LoggedOut = () => (
   <div>
-    <h1>Draft Pick</h1>
-    <h2>The annual mock draft game</h2>
+    <Headline as="h1">Draft Pick</Headline>
+    <MediumText>The annual mock draft game</MediumText>
     <p>
       Compete aganist your friends, family, and other fans for the ultimate
       prize of being right
@@ -168,13 +169,7 @@ export const Stage = () => {
         <source src="/videos/hugs.mp4" type="video/mp4" />
       </video>
       <div>
-        <Lock>
-          {isValidSession() && user ? (
-            <LoggedIn user={user.first_name} />
-          ) : (
-            <LoggedOut />
-          )}
-        </Lock>
+        <Lock>{isValidSession() && user ? <LoggedIn /> : <LoggedOut />}</Lock>
       </div>
     </Container>
   );

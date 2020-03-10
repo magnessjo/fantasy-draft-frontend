@@ -1,19 +1,22 @@
 import styled, { css } from 'styled-components';
+import { Color } from '../variables';
 
 export const CTAStyles = css`
-  font-weight: 700;
   padding: 10px 20px;
-  letter-spacing: 0.5px;
   display: inline-block;
   margin-top: 20px;
-  text-transform: uppercase;
   transition: background 0.5s ease-in-out;
+  background-color: ${Color.lightBlue};
+  color: ${Color.white};
+  text-transform: capitalize;
+  border-radius: 5px;
 
   &:hover {
     text-decoration: none;
+    background-color: rgba(69, 149, 209, 0.7);
   }
 `;
 
-export const CTA = styled.div`
+export const CTA = styled.button`
   ${CTAStyles}
 `;

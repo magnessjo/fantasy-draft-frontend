@@ -14,6 +14,7 @@ export const validate = (type: string, value: string) => {
   if (type === 'text') return validateString(value);
   if (type === 'password') return validatePassword(value);
   if (type === 'email') return validateEmail(value);
+  if (type === 'any') return value.length > 0;
 
   return null;
 };

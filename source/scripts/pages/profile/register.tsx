@@ -120,6 +120,7 @@ export const Register = () => {
 
             <Input
               type="text"
+              validateType="any"
               placeholder="johnnyu4life"
               name="username"
               label="username"
@@ -129,6 +130,7 @@ export const Register = () => {
 
             <Input
               type="email"
+              validateType="email"
               placeholder="johnnyu@example.com"
               name="email"
               label="email"
@@ -139,6 +141,7 @@ export const Register = () => {
 
             <Input
               type="password"
+              validateType="password"
               placeholder=""
               name="password"
               label="password"

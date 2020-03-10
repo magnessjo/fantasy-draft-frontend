@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Color } from 'scripts/variables';
+import { Color, Breakpoints } from 'scripts/variables';
 
 export const ChildrenWrapper = styled.div<{
   styles: {
@@ -20,7 +20,7 @@ export const CenteredDivWithLogo = styled.div`
   position: relative;
   margin: 0 auto;
 
-  @media (min-width: 768px) {
+  @media (min-width: ${Breakpoints.largeMin}px) {
     padding: 80px 60px 60px;
   }
 
@@ -34,7 +34,7 @@ export const CenteredDivWithLogo = styled.div`
     object-fit: contain;
     z-index: 999;
 
-    @media (min-width: 768px) {
+    @media (min-width: ${Breakpoints.largeMin}px) {
       height: 140px;
     }
   }
@@ -93,7 +93,7 @@ export const InputSubmit = styled.input.attrs<{
   background-color: ${Color.blue};
   color: ${Color.white};
 
-  @media (min-width: 768px) {
+  @media (min-width: ${Breakpoints.largeMin}px) {
     font-size: 17px;
   }
 `;

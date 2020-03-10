@@ -76,6 +76,7 @@ export const PasswordReset = () => {
           <React.Fragment>
             <Input
               type="password"
+              validateType="password"
               name="password"
               label="password"
               formState={formState}

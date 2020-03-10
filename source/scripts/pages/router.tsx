@@ -19,26 +19,59 @@ import { PasswordReset } from './profile/password-reset';
 
 // Components
 
-import { Header } from './components/header';
-import { Modal } from './components/modal';
-import { Alert } from './components/alert';
+import { Header } from '../components/header';
+import { Footer } from '../components/footer';
+import { Modal } from '../components/modal';
+import { Alert } from '../components/alert';
+import { ContactPage } from './contact';
+import { PrivacyPage } from './privacy';
 
-const PageWrapper = styled.div`
-  padding-top: 60px;
+const PageWrapper = styled.div<{
+  homepage?: boolean;
+}>`
+  min-height: calc(100vh - 120px);
+  padding-top: ${({ homepage = false }) => (homepage ? `0` : `65px`)};
+`;
 
-  @media (min-width: 768px) {
-    padding-top: 80px;
+const ErrorPage = styled.div`
+  min-height: calc(100vh - 80px);
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  & img {
+    max-width: 400px;
+    margin: 0 auto 40px auto;
+  }
+
+  & p {
+    font-size: 20px;
+    font-size: calc(20px + 0.2vw);
+
+    &:first-of-type {
+      font-size: calc(20px + 1vw);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
   }
 `;
 
+const checkPaths = (path: string, paths: Array<string>) =>
+  paths.find(nonPath => nonPath === path);
+
 const Layout = ({
   children,
+  path,
 }: {
   children: JSX.Element | Array<JSX.Element>;
+  path: string;
 }) => (
   <div>
     <Header />
-    <PageWrapper>{children}</PageWrapper>
+    <PageWrapper homepage={path === '/'}>{children}</PageWrapper>
+    <Footer />
   </div>
 );
 
@@ -60,29 +93,26 @@ const ProtectedRoute = ({
   );
 };
 
-// To Do : Make 404 page
-
 const NoMatch = () => (
-  <div>
-    <p>No page found</p>
-    <p>404 page coming soon...</p>
-  </div>
+  <ErrorPage>
+    <div>
+      <img src="/images/404.jpg" aria-hidden="false" />
+      <p>Oh no!</p>
+      <p>The page that you requested could not be found</p>
+    </div>
+  </ErrorPage>
 );
-
-const nonHeaderPaths = [
-  '/register',
-  '/login',
-  '/email-verify',
-  '/forgotten-password',
-  '/password/reset',
-];
-const checkHeaderPaths = (path: string) =>
-  nonHeaderPaths.find(nonPath => nonPath === path);
 
 const Router = () => {
   const location = useLocation();
 
-  // To Do : Clean up routes
+  const nonHeaderPaths = [
+    '/register',
+    '/login',
+    '/email-verify',
+    '/forgotten-password',
+    '/password/reset',
+  ];
 
   return (
     <div>
@@ -94,11 +124,13 @@ const Router = () => {
       <Route path="/login" render={() => <Login />} />
       <Route path="/email-verify" render={() => <EmailVerification />} />
       <Route path="/forgotten-password" render={() => <ForgotPassword />} />
-      {!checkHeaderPaths(location.pathname) && (
-        <Layout>
+      {!checkPaths(location.pathname, nonHeaderPaths) && (
+        <Layout path={location.pathname}>
           <Switch>
             <ProtectedRoute path="/profile" Component={<Profile />} />
             <ProtectedRoute path="/entries" Component={<Entries />} />
+            <ProtectedRoute path="/contact" Component={<ContactPage />} />
+            <ProtectedRoute path="/privacy" Component={<PrivacyPage />} />
             <Route path="/" exact render={() => <Home />} />
             <Route component={NoMatch} />
           </Switch>

@@ -74,6 +74,7 @@ export const ForgotPassword = () => {
           <React.Fragment>
             <Input
               type="email"
+              validateType="email"
               placeholder="johnnyu4life@gmail.com"
               name="email"
               label="email"

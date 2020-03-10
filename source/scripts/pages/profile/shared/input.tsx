@@ -16,6 +16,7 @@ export type FormInputs = {
 
 type InputProps = FormStateTypes & {
   type: string;
+  validateType?: string;
   name: string;
   placeholder?: string;
   label: string;
@@ -73,6 +74,7 @@ const HelpText = styled.p`
 
 export const Input = ({
   type = 'input',
+  validateType = 'text',
   placeholder,
   name,
   label,
@@ -98,7 +100,7 @@ export const Input = ({
   };
 
   const validateValue =
-    typeof value === 'string' ? validate(type, value) : null;
+    typeof value === 'string' ? validate(validateType, value) : null;
 
   const isValid = isActive ? null : validateValue;
 

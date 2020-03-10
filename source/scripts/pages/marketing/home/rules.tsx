@@ -1,49 +1,58 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Lock } from 'scripts/styles/lock';
-
-const Container = styled.section`
-  padding: 40px 0;
-
-  & h1 {
-    margin-bottom: 30px;
-    text-align: center;
-    font-size: 22px;
-    font-size: calc(22px + 2vw);
-    text-transform: uppercase;
-  }
-
-  & ${Lock} > p {
-    max-width: 800px;
-    margin: 0 auto;
-    margin-bottom: 50px;
-    text-align: center;
-    font-size: 18px;
-    font-size: calc(18px + 0.2vw);
-    line-height: 1.3em;
-  }
-`;
+import { Color, Breakpoints } from 'scripts/variables';
+import { SectionContainer, SectionHeadline } from './styles';
 
 const Row = styled.div`
-  @media (min-width: 768px) {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (min-width: ${Breakpoints.largeMin}px) {
     display: flex;
+    /* flex-wrap: wrap; */
   }
 `;
 
 const Column = styled.div`
   padding: 20px;
-  margin-bottom: 20px;
-  flex: 1;
+  position: relative;
+  text-align: center;
 
-  @media (min-width: 768px) {
+  @media (max-width: ${Breakpoints.mediumMax}px) {
+    border-bottom: 1px solid ${Color.black};
+  }
+
+  @media (min-width: ${Breakpoints.largeMin}px) {
     margin-bottom: 0;
-    border-left: 1px solid black;
+    width: 25%;
   }
 
-  & h2 {
+  &:after {
+    @media (min-width: ${Breakpoints.largeMin}px) {
+      content: '';
+      height: 60%;
+      width: 1px;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      background-color: ${Color.black};
+      display: block;
+    }
   }
 
-  & span:first-of-type {
+  &:first-of-type:after {
+    display: none;
+  }
+
+  &:last-of-type {
+    @media (max-width: ${Breakpoints.mediumMax}px) {
+      border-bottom: none;
+    }
+  }
+
+  & span {
     display: block;
     text-align: center;
     font-size: 22px;
@@ -53,74 +62,79 @@ const Column = styled.div`
     line-height: 1em;
   }
 
-  & span:last-of-type {
-    display: block;
-    text-align: center;
-    font-size: 16px;
-    font-size: calc(16px + 0.5vw);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
   & li {
     text-align: center;
     list-style: none;
+    text-transform: capitalize;
+    display: inline-block;
+    margin-left: 20px;
+    position: relative;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    &:first-of-type:after {
+      display: none;
+    }
+
+    &:after {
+      content: '+';
+      left: -13px;
+      top: 50%;
+      transform: translateY(-50%);
+      position: absolute;
+    }
   }
 `;
 
 export const Rules = () => (
-  <Container>
+  <SectionContainer>
     <Lock>
-      <h1>The Rules</h1>
+      <SectionHeadline>The Rules</SectionHeadline>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur
-        pretium eros, non porttitor orci dictum ut. Donec cursus dui eu rhoncus
-        semper. Cras varius a est id pharetra. Vestibulum scelerisque, enim sed
-        placerat congue, sem lacus maximus mi, quis ornare risus risus ut augue.{' '}
+        Each entry will accumulate points per selection. The combination of
+        player, team, and selection determines the points.
       </p>
-    </Lock>
 
-    <Row>
-      <Column>
-        <h2>
-          <span>1</span>
-          <span>point</span>
-        </h2>
-        <ul>
-          <li>player</li>
-        </ul>
-      </Column>
-      <Column>
-        <h2>
-          <span>2</span>
-          <span>points</span>
-        </h2>
-        <ul>
-          <li>player</li>
-          <li>selection</li>
-        </ul>
-      </Column>
-      <Column>
-        <h2>
-          <span>3</span>
-          <span>points</span>
-        </h2>
-        <ul>
-          <li>player</li>
-          <li>team</li>
-        </ul>
-      </Column>
-      <Column>
-        <h2>
-          <span>4</span>
-          <span>points</span>
-        </h2>
-        <ul>
-          <li>player</li>
-          <li>team</li>
-          <li>selection</li>
-        </ul>
-      </Column>
-    </Row>
-  </Container>
+      <Row>
+        <Column>
+          <h2>
+            <span>4</span>
+          </h2>
+          <ul>
+            <li>player</li>
+            <li>team</li>
+            <li>selection</li>
+          </ul>
+        </Column>
+        <Column>
+          <h2>
+            <span>3</span>
+          </h2>
+          <ul>
+            <li>player</li>
+            <li>team</li>
+          </ul>
+        </Column>
+        <Column>
+          <h2>
+            <span>2</span>
+          </h2>
+          <ul>
+            <li>player</li>
+            <li>selection</li>
+          </ul>
+        </Column>
+        <Column>
+          <h2>
+            <span>1</span>
+          </h2>
+          <ul>
+            <li>player</li>
+          </ul>
+        </Column>
+      </Row>
+    </Lock>
+  </SectionContainer>
 );
