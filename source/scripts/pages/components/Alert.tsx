@@ -46,7 +46,7 @@ let alertColors = {
   highlights: Color.white,
 };
 
-const Alert = () => {
+export const Alert = () => {
   const dispatch = useDispatch();
   const [showing, setShowing] = useState(false);
   const [hide, setHide] = useState(false);
@@ -90,5 +90,3 @@ const Alert = () => {
     </Container>
   );
 };
-
-export default Alert;

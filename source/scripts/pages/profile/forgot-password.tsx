@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
+import { useDispatch } from 'react-redux';
 import gql from 'graphql-tag';
-import Input, { FormInputs } from './shared/input';
-import UserForm, { FormStateTypes } from './shared/form';
+import { setModalAction } from 'scripts/store';
+import { Input, FormInputs } from './shared/input';
+import { UserForm, FormStateTypes } from './shared/form';
 import { InputSubmit } from './shared/styles';
 import {
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables,
 } from 'scripts/generated/types';
-import { useDispatch } from 'react-redux';
-import { setModalAction } from 'scripts/store';
 
 const initialFormState = {
   email: '',
@@ -29,7 +29,7 @@ const FORGOT_PASSWORD = gql`
   }
 `;
 
-const ForgotPassword = () => {
+export const ForgotPassword = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [submitUser, { error, loading, data }] = useMutation<
@@ -92,5 +92,3 @@ const ForgotPassword = () => {
     </UserForm>
   );
 };
-
-export default ForgotPassword;

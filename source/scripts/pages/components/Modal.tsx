@@ -89,7 +89,7 @@ const HeadlineText = ({
   </HeadlineTextStyle>
 );
 
-const Modal = () => {
+export const Modal = () => {
   const dispatch = useDispatch();
   const [showing, setShowing] = useState(false);
   const modalState = useSelector<RootState, ModalTypes>(
@@ -118,5 +118,3 @@ const Modal = () => {
     </CloseWrapper>
   );
 };
-
-export default Modal;

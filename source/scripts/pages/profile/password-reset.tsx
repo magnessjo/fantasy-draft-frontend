@@ -5,8 +5,8 @@ import gql from 'graphql-tag';
 import { useDispatch } from 'react-redux';
 import queryString from 'query-string';
 import { setAlertAction } from 'scripts/store';
-import Input, { FormInputs } from './shared/input';
-import UserForm, { FormStateTypes } from './shared/form';
+import { Input, FormInputs } from './shared/input';
+import { UserForm, FormStateTypes } from './shared/form';
 import { InputSubmit } from './shared/styles';
 import {
   UpdateForgottenPasswordMutation,
@@ -30,7 +30,7 @@ const UPDATE_PASSWORD = gql`
   }
 `;
 
-const PasswordReset = () => {
+export const PasswordReset = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const params = useParams<{ token: string }>();
@@ -95,5 +95,3 @@ const PasswordReset = () => {
     </UserForm>
   );
 };
-
-export default PasswordReset;

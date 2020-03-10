@@ -3,8 +3,8 @@ import gql from 'graphql-tag';
 import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { useMutation } from '@apollo/react-hooks';
-import Loader from 'scripts/styles/loader';
-import Error from 'scripts/styles/error';
+import { Loader } from 'scripts/styles/loader';
+import { Error } from 'scripts/styles/error';
 import { BlueBackground, CenteredDivWithLogo } from './shared/styles';
 import {
   VerifyEmailMutationVariables,
@@ -19,7 +19,7 @@ const VERIFY_EMAIL = gql`
   }
 `;
 
-const EmailVerification = () => {
+export const EmailVerification = () => {
   const history = useHistory();
   const location = useLocation();
   const { token } = queryString.parse(location.search);
@@ -66,5 +66,3 @@ const EmailVerification = () => {
     </BlueBackground>
   );
 };
-
-export default EmailVerification;

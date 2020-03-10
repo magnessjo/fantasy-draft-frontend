@@ -71,7 +71,7 @@ const HelpText = styled.p`
   padding-top: 5px;
 `;
 
-const Input = ({
+export const Input = ({
   type = 'input',
   placeholder,
   name,
@@ -118,5 +118,3 @@ const Input = ({
     </InputWrapper>
   );
 };
-
-export default Input;

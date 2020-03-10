@@ -55,7 +55,7 @@ const ATHLETE_SCHOOL_QUERY = gql`
   ${ATHLETE_DATA}
 `;
 
-const Athletes = () => {
+export const Athletes = () => {
   const { data } = useQuery<FetchAthletesQuery, FetchAthletesQueryVariables>(
     ATHLETES_QUERY,
     {
@@ -83,5 +83,3 @@ const Athletes = () => {
 
   return <div></div>;
 };
-
-export default Athletes;

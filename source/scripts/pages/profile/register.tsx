@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { setModalAction } from 'scripts/store';
-import Input, { FormInputs } from './shared/input';
-import UserForm, { FormStateTypes } from './shared/form';
-import { InputSubmit } from './shared/styles';
 import { GraphQLError } from 'graphql';
+import { setModalAction } from 'scripts/store';
+import { Input, FormInputs } from './shared/input';
+import { UserForm, FormStateTypes } from './shared/form';
+import { InputSubmit } from './shared/styles';
 import {
   RegisterUserMutation,
   RegisterUserMutationVariables,
@@ -46,7 +46,7 @@ const makeErrorMessage = (error: Readonly<GraphQLError[]>) => {
   return messages ?? [];
 };
 
-const Register = () => {
+export const Register = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [submitUser, { error, loading, data }] = useMutation<
@@ -164,5 +164,3 @@ const Register = () => {
     </UserForm>
   );
 };
-
-export default Register;

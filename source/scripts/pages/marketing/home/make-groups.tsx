@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Lock from 'scripts/styles/lock';
+import { Lock } from 'scripts/styles/lock';
 
 const Container = styled.section`
   padding: 40px 0;
@@ -24,7 +24,7 @@ const Container = styled.section`
   }
 `;
 
-const MakeGroups = () => (
+export const MakeGroups = () => (
   <Container>
     <Lock>
       <h1>Make Groups</h1>
@@ -37,5 +37,3 @@ const MakeGroups = () => (
     </Lock>
   </Container>
 );
-
-export default MakeGroups;

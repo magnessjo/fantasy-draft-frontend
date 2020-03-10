@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Lock from 'scripts/styles/lock';
+import { Lock } from 'scripts/styles/lock';
 
 const Container = styled.section`
   padding: 40px 0;
@@ -68,7 +68,7 @@ const Column = styled.div`
   }
 `;
 
-const Rules = () => (
+export const Rules = () => (
   <Container>
     <Lock>
       <h1>The Rules</h1>
@@ -124,5 +124,3 @@ const Rules = () => (
     </Row>
   </Container>
 );
-
-export default Rules;

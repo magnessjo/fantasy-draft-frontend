@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Lock from 'scripts/styles/lock';
+import { Lock } from 'scripts/styles/lock';
 import { CTAStyles } from 'scripts/styles/call-to-action';
 import { Color } from 'scripts/variables';
 import { useSelector } from 'react-redux';
 import { RootState, UserType } from 'scripts/types';
 import { isValidSession } from 'scripts/lib/session';
 
-const Stage = styled.section`
+const Container = styled.section`
   position: relative;
   overflow: hidden;
   background-image: url(/images/home/stage-default.jpg);
@@ -154,11 +154,11 @@ const LoggedOut = () => (
   </div>
 );
 
-const Home = () => {
+export const Stage = () => {
   const user = useSelector<RootState, UserType>(state => state.userState);
 
   return (
-    <Stage>
+    <Container>
       <video
         muted
         playsInline
@@ -176,8 +176,6 @@ const Home = () => {
           )}
         </Lock>
       </div>
-    </Stage>
+    </Container>
   );
 };
-
-export default Home;

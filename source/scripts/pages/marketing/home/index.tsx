@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Stage from './stage';
-import Rules from './rules';
-import MakeGroups from './make-groups';
+import { Stage } from './stage';
+import { Rules } from './rules';
+import { MakeGroups } from './make-groups';
 
 const Container = styled.div``;
 
-const Home = () => {
+export const Home = () => {
   return (
     <Container>
       <Stage />
@@ -15,5 +15,3 @@ const Home = () => {
     </Container>
   );
 };
-
-export default Home;

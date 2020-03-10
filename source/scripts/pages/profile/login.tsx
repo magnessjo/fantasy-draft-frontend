@@ -4,11 +4,11 @@ import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
-import UserForm, { FormStateTypes } from './shared/form';
-import { InputSubmit } from './shared/styles';
-import { LoginMutation, LoginMutationVariables } from 'scripts/generated/types';
-import Input, { FormInputs } from './shared/input';
 import { getSessionTime } from 'scripts/lib/session';
+import { UserForm, FormStateTypes } from './shared/form';
+import { InputSubmit } from './shared/styles';
+import { Input, FormInputs } from './shared/input';
+import { LoginMutation, LoginMutationVariables } from 'scripts/generated/types';
 
 const initialFormState = {
   username: '',
@@ -28,7 +28,7 @@ const CREATE_USER = gql`
   }
 `;
 
-const Login = () => {
+export const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [submitUser, { error, loading, data }] = useMutation<
@@ -114,7 +114,11 @@ const Login = () => {
 
             <InputSubmit />
             <p>
-              Not a Member yet? <Link to="/signup"> Sign up</Link>
+              Not a Member yet? <Link to="/register"> Sign up</Link>
+            </p>
+            <p>
+              Not sure of your password?{' '}
+              <Link to="/forgotten-password"> Reset Password</Link>
             </p>
           </React.Fragment>
         );
@@ -122,5 +126,3 @@ const Login = () => {
     </UserForm>
   );
 };
-
-export default Login;

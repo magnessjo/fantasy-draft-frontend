@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import Loader from 'scripts/styles/loader';
+import { Loader } from 'scripts/styles/loader';
 import { FormInputs } from './input';
 import { validate } from 'scripts/lib/form';
 import { BlueBackground, CenteredDivWithLogo, ChildrenWrapper } from './styles';
@@ -61,7 +61,7 @@ const Errors = ({ error }: { error?: ErrorMessageTypes }) => {
   return null;
 };
 
-const UserForm = ({
+export const UserForm = ({
   children,
   initalFormValue,
   successfulForm,
@@ -127,5 +127,3 @@ const UserForm = ({
     </BlueBackground>
   );
 };
-
-export default UserForm;

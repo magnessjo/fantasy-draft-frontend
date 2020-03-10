@@ -14,8 +14,6 @@ export const CTAStyles = css`
   }
 `;
 
-const CTA = styled.div`
+export const CTA = styled.div`
   ${CTAStyles}
 `;
-
-export default CTA;

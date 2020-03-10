@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Lock = styled.div`
+export const Lock = styled.div`
   padding: 0 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -13,5 +13,3 @@ const Lock = styled.div`
     padding: 0 40px;
   }
 `;
-
-export default Lock;

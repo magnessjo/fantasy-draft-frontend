@@ -55,7 +55,7 @@ const DefaultView = () => {
   );
 };
 
-const Profile = () => {
+export const Profile = () => {
   const [view, setView] = useState<string>(DEFAULT);
 
   const actionSelection = (str: string) => setView(str);
@@ -76,5 +76,3 @@ const Profile = () => {
     </Container>
   );
 };
-
-export default Profile;

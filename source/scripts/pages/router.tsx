@@ -1,27 +1,27 @@
 import React from 'react';
 import { Route, useLocation, Redirect, Switch } from 'react-router-dom';
+import styled from 'styled-components';
 import { isValidSession } from 'scripts/lib/session';
 
 // Pages
 
-import Home from './marketing/home';
-import Profile from './profile';
-import Entries from './game/entries';
+import { Home } from './marketing/home';
+import { Profile } from './profile';
+import { Entries } from './game/entries';
 
 // Login
 
-import Register from './profile/register';
-import Login from './profile/login';
-import ForgotPassword from './profile/forgot-password';
-import EmailVerification from './profile/verification';
-import PasswordReset from './profile/password-reset';
+import { Register } from './profile/register';
+import { Login } from './profile/login';
+import { ForgotPassword } from './profile/forgot-password';
+import { EmailVerification } from './profile/verification';
+import { PasswordReset } from './profile/password-reset';
 
 // Components
 
-import Header from './components/header';
-import Modal from './components/modal';
-import Alert from './components/alert';
-import styled from 'styled-components';
+import { Header } from './components/header';
+import { Modal } from './components/modal';
+import { Alert } from './components/alert';
 
 const PageWrapper = styled.div`
   padding-top: 60px;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CTA from './call-to-action';
+import { CTAStyles } from './call-to-action';
 import { Color } from 'scripts/variables';
 import { ApolloError } from 'apollo-boost';
 
@@ -32,38 +32,32 @@ const LoaderContainer = styled.div`
   }
 `;
 
-const CloseButton = styled(CTA)`
+const CloseButton = styled.button`
+  ${CTAStyles}
   display: block;
   background-color: ${Color.blue};
   color: ${Color.white};
 `;
 
-const Loader = ({
+export const Error = ({
   errorCodes,
   close,
 }: {
   errorCodes?: Array<string> | string | ApolloError;
   close?: () => void;
-}) => {
-  console.log(errorCodes);
-  return (
-    <LoaderContainer>
-      <div>
-        <p className="headline">Well, this is awkward!</p>
-        <p>Some type of error has occured.</p>
-        {Array.isArray(errorCodes) ||
-          (typeof errorCodes === 'string' && (
-            <p>What I know of the error is:</p>
-          ))}
-        {Array.isArray(errorCodes) && errorCodes.map(code => <p>{code}</p>)}
-        {typeof errorCodes === 'string' && <p>{errorCodes}</p>}
-        <img src="/images/helpers/oops.jpg" />
-        <CloseButton as="button" type="button" onClick={close}>
-          Close Error Notice
-        </CloseButton>
-      </div>
-    </LoaderContainer>
-  );
-};
-
-export default Loader;
+}) => (
+  <LoaderContainer>
+    <div>
+      <p className="headline">Well, this is awkward!</p>
+      <p>Some type of error has occured.</p>
+      {Array.isArray(errorCodes) ||
+        (typeof errorCodes === 'string' && <p>What I know of the error is:</p>)}
+      {Array.isArray(errorCodes) && errorCodes.map(code => <p>{code}</p>)}
+      {typeof errorCodes === 'string' && <p>{errorCodes}</p>}
+      <img src="/images/helpers/oops.jpg" />
+      <CloseButton as="button" type="button" onClick={close}>
+        Close Error Notice
+      </CloseButton>
+    </div>
+  </LoaderContainer>
+);

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import Lock from 'scripts/styles/lock';
+import { Lock } from 'scripts/styles/lock';
 import { Color } from 'scripts/variables';
 import { isValidSession } from 'scripts/lib/session';
 import gql from 'graphql-tag';
@@ -131,7 +131,7 @@ const LoggedOut = () => (
   </nav>
 );
 
-const Header = () => {
+export const Header = () => {
   return (
     <Wrapper>
       <Lock>
@@ -145,5 +145,3 @@ const Header = () => {
     </Wrapper>
   );
 };
-
-export default Header;

@@ -47,7 +47,7 @@ const LoaderContainer = styled.div`
   }
 `;
 
-const Loader = () => (
+export const Loader = () => (
   <LoaderContainer>
     <div className="loader">
       <div></div>
@@ -56,5 +56,3 @@ const Loader = () => (
     </div>
   </LoaderContainer>
 );
-
-export default Loader;
