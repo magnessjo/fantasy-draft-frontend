@@ -67,6 +67,10 @@ export const MediumSerifFont = css`
   }
 `;
 
+export const MediumSerif = styled.p`
+  ${MediumSerifFont}
+`;
+
 export const RegularSerifFont = css`
   font-family: 'Noto Serif', serif;
   font-size: 18px;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Lock } from '../styles/lock';
-import { Color } from '../variables';
+import { Breakpoints, Color } from '../variables';
 
 const Container = styled.footer`
   background-color: ${Color.darkBlue};
@@ -33,8 +33,12 @@ const Container = styled.footer`
   }
 
   & img {
-    height: 80px;
+    height: 40px;
     margin-left: auto;
+
+    @media (min-width: ${Breakpoints.largeMin}px) {
+      height: 80px;
+    }
   }
 `;
 

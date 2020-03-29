@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import gql from 'graphql-tag';
 import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
@@ -14,7 +14,9 @@ import {
 const VERIFY_EMAIL = gql`
   mutation verifyEmail($input: VerifyEmailInput!) {
     verifyEmail(input: $input) {
-      access_token
+      user {
+        id
+      }
     }
   }
 `;
@@ -23,15 +25,14 @@ export const EmailVerification = () => {
   const history = useHistory();
   const location = useLocation();
   const { token } = queryString.parse(location.search);
+  const [submitting, setSubmitting] = useState(false);
   const [verifyEmail, { error, loading, data }] = useMutation<
     VerifyEmailMutation,
     VerifyEmailMutationVariables
   >(VERIFY_EMAIL);
 
   useEffect(() => {
-    // Mutation
-
-    if (typeof token === 'string') {
+    if (typeof token === 'string' && !submitting) {
       verifyEmail({
         variables: {
           input: {
@@ -39,14 +40,13 @@ export const EmailVerification = () => {
           },
         },
       });
+      setSubmitting(true);
     }
 
-    // Sucess
-
-    if (data?.verifyEmail?.access_token) {
+    if (data?.verifyEmail?.user?.id) {
       history.push('/login');
     }
-  }, [data]);
+  }, [data, submitting, setSubmitting]);
 
   const close = () => history.push('/');
 

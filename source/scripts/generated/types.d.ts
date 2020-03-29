@@ -18,20 +18,11 @@ export type Athlete = {
   school: Scalars['String'],
   position: Scalars['String'],
   school_standing: Scalars['String'],
-  eligible_year: Scalars['String'],
+  eligible_year?: Maybe<Scalars['String']>,
   height?: Maybe<Scalars['String']>,
   weight?: Maybe<Scalars['String']>,
   description?: Maybe<Scalars['String']>,
   image?: Maybe<Scalars['String']>,
-};
-
-/** A paginated list of Athlete items. */
-export type AthletePaginator = {
-   __typename?: 'AthletePaginator',
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo,
-  /** A list of Athlete items. */
-  data: Array<Athlete>,
 };
 
 export type AuthPayload = {
@@ -43,7 +34,35 @@ export type AuthPayload = {
   user?: Maybe<User>,
 };
 
+export type CreateEntryInput = {
+  name: Scalars['String'],
+  user_id: Scalars['ID'],
+};
 
+
+
+export type Entries = {
+   __typename?: 'Entries',
+  id: Scalars['String'],
+  user_id: Scalars['String'],
+  name: Scalars['String'],
+  selections: Array<Selection>,
+};
+
+/** A paginated list of Entries items. */
+export type EntriesPaginator = {
+   __typename?: 'EntriesPaginator',
+  /** Pagination information about the list of items. */
+  paginatorInfo: PaginatorInfo,
+  /** A list of Entries items. */
+  data: Array<Entries>,
+};
+
+export type EntryInput = {
+  id: Scalars['ID'],
+  org_id: Scalars['ID'],
+  athlete_id?: Maybe<Scalars['ID']>,
+};
 
 export type ForgotPasswordInput = {
   email: Scalars['String'],
@@ -73,8 +92,9 @@ export type Mutation = {
   login: AuthPayload,
   forgotPassword: ForgotPasswordResponse,
   updateForgottenPassword: ForgotPasswordResponse,
-  refreshToken: RefreshTokenPayload,
   logout: LogoutResponse,
+  updateEntry: UpdateEntryResponse,
+  createEntry: Entries,
 };
 
 
@@ -103,8 +123,13 @@ export type MutationUpdateForgottenPasswordArgs = {
 };
 
 
-export type MutationRefreshTokenArgs = {
-  input?: Maybe<RefreshTokenInput>
+export type MutationUpdateEntryArgs = {
+  input: EntryInput
+};
+
+
+export type MutationCreateEntryArgs = {
+  input: CreateEntryInput
 };
 
 export type NewPasswordWithCodeInput = {
@@ -119,6 +144,24 @@ export type OrderByClause = {
   field: Scalars['String'],
   /** The direction that is used for ordering. */
   order: SortOrder,
+};
+
+export type Organization = {
+   __typename?: 'Organization',
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  city: Scalars['String'],
+  image: Scalars['String'],
+  primary_color: Scalars['String'],
+};
+
+/** A paginated list of Organization items. */
+export type OrganizationPaginator = {
+   __typename?: 'OrganizationPaginator',
+  /** Pagination information about the list of items. */
+  paginatorInfo: PaginatorInfo,
+  /** A list of Organization items. */
+  data: Array<Organization>,
 };
 
 /** Pagination information about the corresponding list of items. */
@@ -165,21 +208,48 @@ export type PaginatorInfo = {
 
 export type Query = {
    __typename?: 'Query',
-  athletes?: Maybe<AthletePaginator>,
+  athletes: Array<Athlete>,
   athlete?: Maybe<Athlete>,
+  organization?: Maybe<OrganizationPaginator>,
+  users?: Maybe<User>,
+  selections: Array<Selection>,
+  entries?: Maybe<EntriesPaginator>,
 };
 
 
 export type QueryAthletesArgs = {
   eligible_year: Scalars['String'],
   school?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  page?: Maybe<Scalars['Int']>
+  position?: Maybe<Scalars['String']>,
+  searchText?: Maybe<Scalars['String']>
 };
 
 
 export type QueryAthleteArgs = {
   id?: Maybe<Scalars['ID']>
+};
+
+
+export type QueryOrganizationArgs = {
+  first?: Maybe<Scalars['Int']>,
+  page?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryUsersArgs = {
+  id?: Maybe<Scalars['ID']>
+};
+
+
+export type QuerySelectionsArgs = {
+  entry_id: Scalars['ID']
+};
+
+
+export type QueryEntriesArgs = {
+  entry_id: Scalars['ID'],
+  first?: Maybe<Scalars['Int']>,
+  page?: Maybe<Scalars['Int']>
 };
 
 export type RefreshTokenInput = {
@@ -213,6 +283,16 @@ export enum RegisterStatuses {
   Success = 'SUCCESS'
 }
 
+export type Selection = {
+   __typename?: 'Selection',
+  id: Scalars['ID'],
+  entry_id: Scalars['ID'],
+  athlete?: Maybe<Athlete>,
+  organization: Organization,
+  selection: Scalars['Int'],
+  entries?: Maybe<Entries>,
+};
+
 /** The available directions for ordering a list of records. */
 export enum SortOrder {
   /** Sort records in ascending order. */
@@ -231,12 +311,20 @@ export enum Trashed {
   Without = 'WITHOUT'
 }
 
+export type UpdateEntryResponse = {
+   __typename?: 'UpdateEntryResponse',
+  status: Scalars['String'],
+  selections?: Maybe<Selection>,
+};
+
 export type User = {
    __typename?: 'User',
+  id: Scalars['String'],
   first_name: Scalars['String'],
   last_name: Scalars['String'],
   email: Scalars['String'],
   username: Scalars['String'],
+  entries: Array<Entries>,
 };
 
 export type VerifyEmailInput = {
@@ -248,38 +336,38 @@ export type LogoutMutationVariables = {};
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'LogoutResponse', status: string, message: Maybe<string> } };
 
-export type AthleteDataFragment = { __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string };
-
-export type FetchAthletesQueryVariables = {
-  year: Scalars['String']
+export type UpdateEntrySelectionMutationVariables = {
+  input: EntryInput
 };
 
 
-export type FetchAthletesQuery = { __typename?: 'Query', athletes: Maybe<{ __typename?: 'AthletePaginator', data: Array<(
-      { __typename?: 'Athlete' }
-      & AthleteDataFragment
-    )> }> };
+export type UpdateEntrySelectionMutation = { __typename?: 'Mutation', updateEntry: { __typename?: 'UpdateEntryResponse', status: string, selections: Maybe<{ __typename?: 'Selection', id: string, selection: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> } };
 
-export type FetchAthletesByIdQueryVariables = {
+export type CreateEntryMutationVariables = {
+  input: CreateEntryInput
+};
+
+
+export type CreateEntryMutation = { __typename?: 'Mutation', createEntry: { __typename?: 'Entries', id: string } };
+
+export type GetEntrySelectionsQueryVariables = {
   id: Scalars['ID']
 };
 
 
-export type FetchAthletesByIdQuery = { __typename?: 'Query', athlete: Maybe<(
-    { __typename?: 'Athlete', height: Maybe<string>, weight: Maybe<string>, description: Maybe<string>, image: Maybe<string> }
-    & AthleteDataFragment
-  )> };
+export type GetEntrySelectionsQuery = { __typename?: 'Query', selections: Array<{ __typename?: 'Selection', id: string, selection: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> };
 
-export type FetchAthletesBySchoolQueryVariables = {
-  year: Scalars['String'],
-  school: Scalars['String']
+export type GetPlayersQueryVariables = {
+  year: Scalars['String']
 };
 
 
-export type FetchAthletesBySchoolQuery = { __typename?: 'Query', athletes: Maybe<{ __typename?: 'AthletePaginator', data: Array<(
-      { __typename?: 'Athlete' }
-      & AthleteDataFragment
-    )> }> };
+export type GetPlayersQuery = { __typename?: 'Query', athletes: Array<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, image: Maybe<string>, school: string, position: string, school_standing: string, height: Maybe<string>, weight: Maybe<string>, description: Maybe<string> }> };
+
+export type GetOrganizationsQueryVariables = {};
+
+
+export type GetOrganizationsQuery = { __typename?: 'Query', organization: Maybe<{ __typename?: 'OrganizationPaginator', data: Array<{ __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string }> }> };
 
 export type ForgotPasswordMutationVariables = {
   input: ForgotPasswordInput
@@ -288,12 +376,19 @@ export type ForgotPasswordMutationVariables = {
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: { __typename?: 'ForgotPasswordResponse', status: string, message: Maybe<string> } };
 
+export type UserEntriesQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type UserEntriesQuery = { __typename?: 'Query', users: Maybe<{ __typename?: 'User', entries: Array<{ __typename?: 'Entries', id: string, name: string }> }> };
+
 export type LoginMutationVariables = {
   input: LoginInput
 };
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', access_token: Maybe<string>, expires_in: Maybe<number>, user: Maybe<{ __typename?: 'User', first_name: string, last_name: string, username: string }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', access_token: Maybe<string>, expires_in: Maybe<number>, user: Maybe<{ __typename?: 'User', id: string, first_name: string, last_name: string, username: string }> } };
 
 export type UpdateForgottenPasswordMutationVariables = {
   input: NewPasswordWithCodeInput
@@ -314,4 +409,4 @@ export type VerifyEmailMutationVariables = {
 };
 
 
-export type VerifyEmailMutation = { __typename?: 'Mutation', verifyEmail: { __typename?: 'AuthPayload', access_token: Maybe<string> } };
+export type VerifyEmailMutation = { __typename?: 'Mutation', verifyEmail: { __typename?: 'AuthPayload', user: Maybe<{ __typename?: 'User', id: string }> } };

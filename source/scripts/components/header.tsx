@@ -24,12 +24,16 @@ const LOGOUT = gql`
 
 const Wrapper = styled.header`
   display: block;
-  height: 65px;
+  height: 39px;
   position: fixed;
   width: 100%;
   z-index: 999;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.98);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: ${Breakpoints.largeMin}px) {
+    height: 65px;
+  }
 
   & > ${Lock} {
     padding-right: 0;
@@ -45,7 +49,11 @@ const Wrapper = styled.header`
       position: absolute;
       display: block;
       top: 5px;
-      height: 88px;
+      height: 50px;
+
+      @media (min-width: ${Breakpoints.largeMin}px) {
+        height: 88px;
+      }
     }
   }
 
@@ -60,12 +68,13 @@ const Wrapper = styled.header`
       height: 100%;
       display: flex;
       align-items: center;
-      font-size: 14px;
+      font-size: 12px;
       letter-spacing: 1px;
       font-weight: 400;
 
       @media (min-width: ${Breakpoints.largeMin}px) {
         padding: 0 20px;
+        font-size: 14px;
       }
     }
 

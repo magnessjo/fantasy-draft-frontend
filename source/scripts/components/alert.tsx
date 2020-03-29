@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAlertAction } from 'scripts/store';
@@ -8,24 +8,22 @@ import { Color, Breakpoints } from 'scripts/variables';
 const Container = styled.div<{
   alertColors: { background: string; highlights: string };
   showing: boolean;
-  hide: boolean;
 }>`
   background-color: ${({ alertColors }) => `${alertColors.background}`};
   position: fixed;
   left: 50%;
-  top: ${({ showing }) => (showing ? `20px` : `-50px`)};
-  top: ${({ hide }) => hide && `-50px`};
+  top: ${({ showing }) => (showing ? `20px` : `-100px`)};
   transform: translateX(-50%);
   padding: 15px 20px;
   min-width: 280px;
   max-width: 80%;
-  z-index: 999;
+  z-index: 99999;
   display: flex;
   align-items: center;
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
   color: ${({ alertColors }) => `${alertColors.highlights}`};
-  transition: ${({ showing }) => (showing ? `top 700ms` : `none`)};
-  transition-delay: 500ms;
+  transition: top 600ms;
+  transition-delay: 100ms;
 
   @media (min-width: ${Breakpoints.largeMin}px) {
     min-width: 380px;
@@ -48,24 +46,24 @@ let alertColors = {
 
 export const Alert = () => {
   const dispatch = useDispatch();
-  const [showing, setShowing] = useState(false);
-  const [hide, setHide] = useState(false);
+  const [previousText, setPreviousText] = useState('');
   const alertState = useSelector<RootState, AlertType>(
     state => state.alertState,
   );
 
   const close = () => dispatch(setAlertAction(null));
 
-  if (showing && alertState === null) setShowing(false);
-  if (!showing && alertState) {
-    setShowing(true);
+  if (alertState) {
     setTimeout(() => {
-      setHide(true);
-      setTimeout(() => {
-        dispatch(setAlertAction(null));
-      }, 1000);
-    }, 4000);
+      dispatch(setAlertAction(null));
+    }, alertState?.time ?? '4000');
   }
+
+  useEffect(() => {
+    if (alertState?.text && previousText !== alertState.text) {
+      setPreviousText(alertState.text);
+    }
+  }, [previousText, setPreviousText, alertState]);
 
   if (alertState?.type) {
     if (alertState.type === 'notice') {
@@ -80,13 +78,12 @@ export const Alert = () => {
 
   return (
     <Container
-      aria-hidden={!showing}
-      showing={showing}
-      hide={hide}
+      aria-hidden={!!alertState}
+      showing={!!alertState}
       alertColors={alertColors}
     >
       <button onClick={close}>X</button>
-      <p>{alertState?.text}</p>
+      <p>{previousText}</p>
     </Container>
   );
 };

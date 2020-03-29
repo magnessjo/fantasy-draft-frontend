@@ -21,6 +21,7 @@ const CREATE_USER = gql`
       access_token
       expires_in
       user {
+        id
         first_name
         last_name
         username
@@ -47,6 +48,7 @@ export const Login = () => {
       if (token && expires && user) {
         dispatch(
           setUserAction({
+            id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,
             username: user.username,

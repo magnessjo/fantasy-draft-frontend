@@ -6,6 +6,23 @@ import { Lock } from 'scripts/styles/lock';
 import { AccessabilityElement } from 'scripts/styles/accessability';
 import { MediumSans } from 'scripts/styles/fonts';
 import { RootState, UserType } from 'scripts/types';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
+import {
+  UserEntriesQueryVariables,
+  UserEntriesQuery,
+} from 'scripts/generated/types';
+
+const USER_ENTRIES_QUERY = gql`
+  query userEntries($id: ID!) {
+    users(id: $id) {
+      entries {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const Container = styled.section`
   padding: 100px 0;
@@ -35,6 +52,15 @@ const UserInfo = styled.div`
 
 export const Profile = () => {
   const user = useSelector<RootState, UserType>(state => state.userState);
+  const { data, loading, error } = useQuery<
+    UserEntriesQuery,
+    UserEntriesQueryVariables
+  >(USER_ENTRIES_QUERY, {
+    variables: {
+      id: user?.id || '',
+    },
+    skip: !user?.id,
+  });
 
   return (
     <Container>
@@ -50,10 +76,15 @@ export const Profile = () => {
             <Link to="/forgotten-password">Reset Password</Link>
           </UserInfo>
         </Area>
-        {/* 
+
         <Area>
-          <MediumSans></MediumSans>
-        </Area> */}
+          <MediumSans>User Entries</MediumSans>
+          {data?.users?.entries.map(({ id, name }) => (
+            <Link to={`/entries/${id}`} key={`entry-${id}`}>
+              {name} <br />
+            </Link>
+          ))}
+        </Area>
       </Lock>
     </Container>
   );

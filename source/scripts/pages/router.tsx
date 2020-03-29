@@ -7,7 +7,7 @@ import { isValidSession } from 'scripts/lib/session';
 
 import { Home } from './marketing/home';
 import { Profile } from './profile';
-import { Entries } from './game/entries';
+import { Entries } from './entry';
 
 // Login
 
@@ -87,7 +87,6 @@ const ProtectedRoute = ({
   return (
     <Route
       path={path}
-      exact
       render={() => (validSession ? Component : <Redirect to="/login" />)}
     />
   );
@@ -118,7 +117,6 @@ const Router = () => {
     <div>
       <Modal />
       <Alert />
-
       <Route path="/password/:token" exact render={() => <PasswordReset />} />
       <Route path="/register" render={() => <Register />} />
       <Route path="/login" render={() => <Login />} />
@@ -128,6 +126,7 @@ const Router = () => {
         <Layout path={location.pathname}>
           <Switch>
             <ProtectedRoute path="/profile" Component={<Profile />} />
+            <ProtectedRoute path="/entries/:id" Component={<Entries />} />
             <ProtectedRoute path="/entries" Component={<Entries />} />
             <ProtectedRoute path="/contact" Component={<ContactPage />} />
             <ProtectedRoute path="/privacy" Component={<PrivacyPage />} />

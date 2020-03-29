@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Breakpoints } from '../variables';
 
 export const Lock = styled.div`
-  padding: 0 20px;
+  padding: 0 15px;
   max-width: 1200px;
   margin: 0 auto;
 
