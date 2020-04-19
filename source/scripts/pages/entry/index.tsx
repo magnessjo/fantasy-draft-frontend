@@ -4,6 +4,7 @@ import { useParams, useHistory } from 'react-router';
 import gql from 'graphql-tag';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { setAlertAction } from 'scripts/store';
 import { CTAStyles } from 'scripts/styles/call-to-action';
 import { Loader } from 'scripts/styles/loader';
 import { Lock } from 'scripts/styles/lock';
@@ -17,7 +18,6 @@ import {
   CreateEntryMutation,
   CreateEntryMutationVariables,
 } from 'scripts/generated/types';
-import { setAlertAction } from 'scripts/store';
 
 const CREATE_ENTRY_MUTATION = gql`
   mutation createEntry($input: CreateEntryInput!) {
@@ -31,7 +31,7 @@ const ENTRY_SELECTIONS_QUERY = gql`
   query getEntrySelections($id: ID!) {
     selections(entry_id: $id) {
       id
-      selection
+      pick_number
       athlete {
         id
         first_name
@@ -156,6 +156,8 @@ const CreateEntry = () => {
           },
         },
       });
+
+      console.log(response);
 
       const responseId = response?.data?.createEntry?.id;
 

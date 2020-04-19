@@ -5,13 +5,13 @@ import { useSelector } from 'react-redux';
 import { isValidSession } from 'scripts/lib/session';
 import { Lock } from 'scripts/styles/lock';
 import { CTAStyles } from 'scripts/styles/call-to-action';
+import { Breakpoints, Color } from 'scripts/variables';
+import { RootState, UserType } from 'scripts/types';
 import {
   LargeSansFont,
   XLargeSerifFont,
   MediumSansFont,
 } from 'scripts/styles/fonts';
-import { Breakpoints, Color } from 'scripts/variables';
-import { RootState, UserType } from 'scripts/types';
 
 const Container = styled.section`
   position: relative;
@@ -136,10 +136,24 @@ const MediumText = styled.h2`
   color: ${Color.fontBlue};
 `;
 
+const Actions = styled.div`
+  & a:last-of-type {
+    margin-top: 20px;
+
+    @media (min-width: ${Breakpoints.mediumMin}px) {
+      margin-left: 20px;
+      margin-top: 0;
+    }
+  }
+`;
+
 const LoggedIn = () => (
   <div>
     <LargeText>Welcome to best draft game on the internet!</LargeText>
-    <SignUpButton to="/entries">Create an Entry</SignUpButton>
+    <Actions>
+      <SignUpButton to="/entries">Create a new Entry</SignUpButton>
+      <SignUpButton to="/profile">View Entries</SignUpButton>
+    </Actions>
   </div>
 );
 

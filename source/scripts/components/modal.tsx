@@ -107,7 +107,7 @@ export const Modal = () => {
     <CloseWrapper onClick={close} showing={showing}>
       <Container onClick={event => event.stopPropagation()}>
         <div>
-          <button onClick={close} aria-hidden="true">
+          <button onClick={close} aria-hidden="true" z-index="-1">
             X
           </button>
           {modalState.headlineText && (

@@ -6,6 +6,10 @@ import { MediumSansFont } from 'scripts/styles/fonts';
 import { Breakpoints, Color } from 'scripts/variables';
 
 const Row = styled.div<{ order?: string }>`
+  @media (max-width: ${Breakpoints.mediumMax}px) {
+    margin-top: 40px;
+  }
+
   @media (min-width: ${Breakpoints.largeMin}px) {
     height: 300px;
     display: flex;
@@ -17,7 +21,9 @@ const Row = styled.div<{ order?: string }>`
   }
 
   & > * {
-    width: 50%;
+    @media (min-width: ${Breakpoints.largeMin}px) {
+      width: 50%;
+    }
   }
 
   & img {
@@ -28,8 +34,12 @@ const Row = styled.div<{ order?: string }>`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     color: white;
+    height: 100%;
+
+    @media (max-width: ${Breakpoints.mediumMax}px) {
+      height: 100vw;
+    }
   }
 
   & h2 {
@@ -105,7 +115,7 @@ export const MakeGroups = () => (
         {/* <img src="/images/placeholder.jpg" alt="" /> */}
       </Row>
 
-      <Row>
+      {/* <Row>
         <div>
           <h2>Invite your friends</h2>
           <p>Compete against everyone or just the people you select!</p>
@@ -114,8 +124,7 @@ export const MakeGroups = () => (
         <div className="image">
           <p>Coming Soon</p>
         </div>
-        {/* <img src="/images/placeholder.jpg" alt="" /> */}
-      </Row>
+      </Row> */}
     </Lock>
   </SectionContainer>
 );

@@ -2,12 +2,16 @@ import React from 'react';
 import { Route, useLocation, Redirect, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { isValidSession } from 'scripts/lib/session';
+import { Breakpoints } from 'scripts/variables';
 
 // Pages
 
 import { Home } from './marketing/home';
 import { Profile } from './profile';
 import { Entries } from './entry';
+import { ContactPage } from './contact';
+import { PrivacyPage } from './privacy';
+import { Results } from './results';
 
 // Login
 
@@ -23,14 +27,15 @@ import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 import { Modal } from '../components/modal';
 import { Alert } from '../components/alert';
-import { ContactPage } from './contact';
-import { PrivacyPage } from './privacy';
 
 const PageWrapper = styled.div<{
   homepage?: boolean;
 }>`
   min-height: calc(100vh - 120px);
   padding-top: ${({ homepage = false }) => (homepage ? `0` : `65px`)};
+  @media (min-width: ${Breakpoints.largeMin}px) {
+    padding-top: ${({ homepage = false }) => (homepage ? `0` : `135px`)};
+  }
 `;
 
 const ErrorPage = styled.div`
@@ -128,6 +133,7 @@ const Router = () => {
             <ProtectedRoute path="/profile" Component={<Profile />} />
             <ProtectedRoute path="/entries/:id" Component={<Entries />} />
             <ProtectedRoute path="/entries" Component={<Entries />} />
+            <ProtectedRoute path="/results" Component={<Results />} />
             <ProtectedRoute path="/contact" Component={<ContactPage />} />
             <ProtectedRoute path="/privacy" Component={<PrivacyPage />} />
             <Route path="/" exact render={() => <Home />} />

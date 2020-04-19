@@ -120,8 +120,8 @@ const LoggedIn = () => {
 
   return (
     <nav>
-      <Link to="/entries">
-        <span>Entries</span>
+      <Link to="/results">
+        <span>Results</span>
       </Link>
       <Link to="/profile">
         <span>Profile</span>

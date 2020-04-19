@@ -36,7 +36,7 @@ const ENTRY_SELECTION_MUTATION = gql`
       status
       selections {
         id
-        selection
+        pick_number
         athlete {
           id
           first_name
@@ -158,7 +158,7 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
   entries,
 }) => {
   const getEntryById = (id?: number) =>
-    entries.find((entry: EntryType) => entry.selection === id && entry);
+    entries.find((entry: EntryType) => entry.pick_number === id && entry);
 
   const getAddSelection = (id: number) => (id === 33 ? 1 : id);
   const getSubSelection = (id: number) => (id < 1 ? 32 : id);
@@ -171,13 +171,14 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
             onClick={() =>
               setCurrentSelection(
                 //@ts-ignore
-                getEntryById(getSubSelection(currentSelection.selection - 1)),
+                getEntryById(getSubSelection(currentSelection.pick_number - 1)),
               )
             }
           ></button>
 
           <p>
-            #{currentSelection.selection} - {currentSelection.organization.city}{' '}
+            #{currentSelection.pick_number} -{' '}
+            {currentSelection.organization.city}{' '}
             {currentSelection.athlete && (
               <span>
                 - {currentSelection.athlete?.first_name}{' '}

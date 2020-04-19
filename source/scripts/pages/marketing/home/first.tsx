@@ -29,11 +29,14 @@ const Players = styled.div`
 
     @media (max-width: ${Breakpoints.mediumMax}px) {
       flex-grow: 1;
+      display: none;
     }
 
-    @media (max-width: ${Breakpoints.mediumMax}px) {
-      height: calc(100vw - 40px);
-      max-height: 140px;
+    &:nth-of-type(2) {
+      @media (max-width: ${Breakpoints.mediumMax}px) {
+        display: block;
+        height: 100vw;
+      }
     }
   }
 `;

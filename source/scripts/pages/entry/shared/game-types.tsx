@@ -4,7 +4,8 @@ export type EntryType = {
   id: string;
   organization: Organization;
   athlete: Maybe<Athlete>;
-  selection: number;
+  pick_number: number;
+  score?: Maybe<string>;
 };
 
 export type UpdateSelectionType = {

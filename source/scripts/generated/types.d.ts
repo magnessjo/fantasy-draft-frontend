@@ -46,16 +46,9 @@ export type Entries = {
   id: Scalars['String'],
   user_id: Scalars['String'],
   name: Scalars['String'],
+  score?: Maybe<Scalars['String']>,
   selections: Array<Selection>,
-};
-
-/** A paginated list of Entries items. */
-export type EntriesPaginator = {
-   __typename?: 'EntriesPaginator',
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo,
-  /** A list of Entries items. */
-  data: Array<Entries>,
+  user?: Maybe<User>,
 };
 
 export type EntryInput = {
@@ -213,7 +206,7 @@ export type Query = {
   organization?: Maybe<OrganizationPaginator>,
   users?: Maybe<User>,
   selections: Array<Selection>,
-  entries?: Maybe<EntriesPaginator>,
+  entries: Array<Entries>,
 };
 
 
@@ -247,9 +240,7 @@ export type QuerySelectionsArgs = {
 
 
 export type QueryEntriesArgs = {
-  entry_id: Scalars['ID'],
-  first?: Maybe<Scalars['Int']>,
-  page?: Maybe<Scalars['Int']>
+  entry_id?: Maybe<Scalars['ID']>
 };
 
 export type RefreshTokenInput = {
@@ -287,9 +278,10 @@ export type Selection = {
    __typename?: 'Selection',
   id: Scalars['ID'],
   entry_id: Scalars['ID'],
+  score?: Maybe<Scalars['String']>,
+  pick_number: Scalars['Int'],
   athlete?: Maybe<Athlete>,
   organization: Organization,
-  selection: Scalars['Int'],
   entries?: Maybe<Entries>,
 };
 
@@ -341,7 +333,7 @@ export type UpdateEntrySelectionMutationVariables = {
 };
 
 
-export type UpdateEntrySelectionMutation = { __typename?: 'Mutation', updateEntry: { __typename?: 'UpdateEntryResponse', status: string, selections: Maybe<{ __typename?: 'Selection', id: string, selection: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> } };
+export type UpdateEntrySelectionMutation = { __typename?: 'Mutation', updateEntry: { __typename?: 'UpdateEntryResponse', status: string, selections: Maybe<{ __typename?: 'Selection', id: string, pick_number: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> } };
 
 export type CreateEntryMutationVariables = {
   input: CreateEntryInput
@@ -355,7 +347,7 @@ export type GetEntrySelectionsQueryVariables = {
 };
 
 
-export type GetEntrySelectionsQuery = { __typename?: 'Query', selections: Array<{ __typename?: 'Selection', id: string, selection: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> };
+export type GetEntrySelectionsQuery = { __typename?: 'Query', selections: Array<{ __typename?: 'Selection', id: string, pick_number: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> };
 
 export type GetPlayersQueryVariables = {
   year: Scalars['String']
@@ -410,3 +402,8 @@ export type VerifyEmailMutationVariables = {
 
 
 export type VerifyEmailMutation = { __typename?: 'Mutation', verifyEmail: { __typename?: 'AuthPayload', user: Maybe<{ __typename?: 'User', id: string }> } };
+
+export type GetEntriesQueryVariables = {};
+
+
+export type GetEntriesQuery = { __typename?: 'Query', entries: Array<{ __typename?: 'Entries', id: string, score: Maybe<string>, name: string, user: Maybe<{ __typename?: 'User', username: string }>, selections: Array<{ __typename?: 'Selection', id: string, score: Maybe<string>, pick_number: number, athlete: Maybe<{ __typename?: 'Athlete', id: string, first_name: string, last_name: string, school: string, position: string, school_standing: string, image: Maybe<string> }>, organization: { __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string } }> }> };
