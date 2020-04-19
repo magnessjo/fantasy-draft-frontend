@@ -74,10 +74,11 @@ export const First = () => (
     <Lock>
       <SectionHeadline>Who goes #1</SectionHeadline>
       <CenteredSummary>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur
-        pretium eros, non porttitor orci dictum ut. Donec cursus dui eu rhoncus
-        semper. Cras varius a est id pharetra. Vestibulum scelerisque, enim sed
-        placerat congue, sem lacus maximus mi, quis ornare risus risus ut augue.{' '}
+        Can the Bengals pass on the Ohio native Joe Burrow? Is Chase Young a
+        better fit for the Bengals at #1? A lot of executives think Young is the
+        best pass rusher in the 2020 draft. Could the Bengals shock the NFL
+        world by selecting the most complete player Isaiah Simmons? Tune in
+        Thursday, April 23rd to find out!
       </CenteredSummary>
       <Players>
         <div>

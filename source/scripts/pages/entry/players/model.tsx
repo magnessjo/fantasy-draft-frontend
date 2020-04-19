@@ -35,15 +35,17 @@ const PlayerInfoModal = styled.div`
   height: 100%;
   z-index: 999;
   position: relative;
+  max-width: 740px;
+  margin: 0 auto;
 
   & > div {
-    @media (min-width: ${Breakpoints.desktopMin}px) {
+    @media (min-width: ${Breakpoints.largeMin}px) {
       display: flex;
       align-items: center;
     }
 
     & > div {
-      @media (min-width: ${Breakpoints.desktopMin}px) {
+      @media (min-width: ${Breakpoints.largeMin}px) {
         width: 60%;
         padding-left: 20px;
       }
@@ -87,10 +89,12 @@ export const PlayerModel = ({
       {playerInfo && (
         <PlayerInfoModal>
           <div>
-            <img
-              src={`/images/players/2020/${playerInfo.image}`}
-              alt={`image of ${playerInfo.last_name}`}
-            />
+            {playerInfo.image && (
+              <img
+                src={`/images/players/2020/${playerInfo.image}`}
+                alt={`image of ${playerInfo.last_name}`}
+              />
+            )}
             <div>
               <p className="name">{` ${playerInfo.first_name} ${playerInfo.last_name}`}</p>
               <p>
@@ -105,7 +109,9 @@ export const PlayerModel = ({
           {playerInfo.description && (
             <PlayerDescription>{playerInfo.description}</PlayerDescription>
           )}
-          <CloseButton onClick={() => setShowPlayer(null)}>Close</CloseButton>
+          <CloseButton marginTop={50} onClick={() => setShowPlayer(null)}>
+            Close
+          </CloseButton>
         </PlayerInfoModal>
       )}
     </Modal>

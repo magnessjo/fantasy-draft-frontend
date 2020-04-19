@@ -82,9 +82,7 @@ export const Alert = () => {
       showing={!!alertState}
       alertColors={alertColors}
     >
-      <button onClick={close} z-index="-1">
-        X
-      </button>
+      <button onClick={close}>X</button>
       <p>{previousText}</p>
     </Container>
   );

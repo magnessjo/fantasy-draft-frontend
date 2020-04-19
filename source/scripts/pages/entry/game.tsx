@@ -59,11 +59,7 @@ const ENTRY_SELECTION_MUTATION = gql`
 `;
 
 const Container = styled.section`
-  padding: 20px 0;
-
-  @media (min-width: ${Breakpoints.largeMin}px) {
-    padding: 60px 0;
-  }
+  padding-bottom: 80px;
 `;
 
 const Modal = styled.div<{ show: boolean }>`
@@ -114,6 +110,9 @@ const SelectionController = styled.div`
     height: 100%;
 
     & p {
+      min-width: 280px;
+      width: 80%;
+      text-align: center;
     }
 
     & > div {
@@ -163,18 +162,21 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
   const getAddSelection = (id: number) => (id === 33 ? 1 : id);
   const getSubSelection = (id: number) => (id < 1 ? 32 : id);
 
+  const getPreviousId = getEntryById(
+    getSubSelection(currentSelection.pick_number - 1),
+  );
+
+  const getNextId = getEntryById(
+    getAddSelection(currentSelection.pick_number + 1),
+  );
+
   return (
     <SelectionController>
       <div className="wrapper">
         <div>
-          <button
-            onClick={() =>
-              setCurrentSelection(
-                //@ts-ignore
-                getEntryById(getSubSelection(currentSelection.pick_number - 1)),
-              )
-            }
-          ></button>
+          {getPreviousId && (
+            <button onClick={() => setCurrentSelection(getPreviousId)}></button>
+          )}
 
           <p>
             #{currentSelection.pick_number} -{' '}
@@ -187,14 +189,9 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
             )}
           </p>
 
-          <button
-            onClick={() =>
-              setCurrentSelection(
-                //@ts-ignore
-                getEntryById(getAddSelection(currentSelection.selection + 1)),
-              )
-            }
-          ></button>
+          {getNextId && (
+            <button onClick={() => setCurrentSelection(getNextId)}></button>
+          )}
         </div>
       </div>
     </SelectionController>

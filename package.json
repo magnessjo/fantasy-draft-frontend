@@ -7,7 +7,7 @@
     "schema": "apollo schema:download --skipSSLValidation --endpoint=https://fantasy-draft-api.localhost.dev/graphql schema.json",
     "generate": "graphql-codegen",
     "lint": "eslint -c ./eslint-check.js 'source/scripts/**'",
-    "build": "webpack --env.NODE_ENV=production --env.API_URL=https://nfldraftpickapi.joshmagness.com/graphql",
+    "production": "webpack --env.NODE_ENV=production --env.API_URL=https://api.nfldraftpick.com/graphql && ./deploy.sh",
     "start": "webpack -w --env.NODE_ENV=development --env.API_URL=https://fantasy-draft-api.localhost.dev/graphql"
   },
   "author": "",

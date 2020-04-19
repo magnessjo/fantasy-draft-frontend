@@ -8,21 +8,18 @@ import { Background } from './background';
 
 const Container = styled.div`
   & > * {
-    posiiton: relative;
+    position: relative;
     background-color: white;
     z-index: 99;
     overflow: hidden;
   }
 `;
 
-export const Home = () => {
-  return (
-    <Container>
-      <Stage />
-      <Rules />
-      <MakeGroups />
-      <Background />
-      <First />
-    </Container>
-  );
-};
+export const Home = () => (
+  <Container>
+    <Stage />
+    <Rules />
+    <Background />
+    <First />
+  </Container>
+);

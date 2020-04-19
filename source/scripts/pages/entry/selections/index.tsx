@@ -20,8 +20,8 @@ const EntryListContainer = styled.div`
     background-color: ${Color.darkBlue};
   }
 
-  @media (min-width: ${Breakpoints.largeMin}px) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (min-width: ${Breakpoints.largeMin}px) and (max-width: ${Breakpoints.largeMax}px) {
+    grid-template-columns: repeat(6, 1fr);
   }
 
   @media (min-width: ${Breakpoints.desktopMin}px) {
@@ -39,6 +39,17 @@ const EntryLayout = styled.button<{
 
   @media (max-width: ${Breakpoints.smallMax}px) {
     border-bottom: 2px solid ${Color.darkBlue};
+  }
+
+  @media (min-width: ${Breakpoints.largeMin}px) and (max-width: ${Breakpoints.largeMax}px) {
+    grid-column: span 2;
+  }
+
+  &:nth-of-type(31),
+  &:nth-of-type(32) {
+    @media (min-width: ${Breakpoints.largeMin}px) and (max-width: ${Breakpoints.largeMax}px) {
+      grid-column: span 3;
+    }
   }
 
   &:hover .number > p {

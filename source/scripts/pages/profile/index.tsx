@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Lock } from 'scripts/styles/lock';
 import { AccessabilityElement } from 'scripts/styles/accessability';
 import { MediumSans } from 'scripts/styles/fonts';
 import { RootState, UserType } from 'scripts/types';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { Breakpoints, Color } from 'scripts/variables';
 import {
   UserEntriesQueryVariables,
   UserEntriesQuery,
+  DeleteEntryMutation,
+  DeleteEntryMutationVariables,
 } from 'scripts/generated/types';
+import { setModalAction } from 'scripts/store';
 
 const USER_ENTRIES_QUERY = gql`
   query userEntries($id: ID!) {
     users(id: $id) {
+      id
       entries {
         id
         name
@@ -24,8 +29,17 @@ const USER_ENTRIES_QUERY = gql`
   }
 `;
 
+const DELETE_ENTRY_MUTATION = gql`
+  mutation deleteEntry($input: DeleteEntryInput!) {
+    deleteEntry(input: $input) {
+      id
+      name
+    }
+  }
+`;
+
 const Container = styled.section`
-  padding: 100px 0;
+  padding: 30px 0;
   max-width: 1000px;
   margin: 0 auto;
 `;
@@ -50,17 +64,84 @@ const UserInfo = styled.div`
   }
 `;
 
+const EntriesList = styled.div`
+  & > div {
+    @media (min-width: ${Breakpoints.largeMin}px) {
+      display: flex;
+      padding: 20px 10px;
+      transition: background 1s;
+
+      &:hover {
+        background-color: ${Color.lighterGray};
+      }
+    }
+  }
+
+  & button,
+  & a {
+    font-weight: 500;
+    font-size: 18px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  margin-left: auto;
+
+  @media (max-width: ${Breakpoints.mediumMax}px) {
+    margin-top: 20px;
+  }
+
+  & > * + * {
+    margin-left: 20px;
+  }
+`;
+
 export const Profile = () => {
   const user = useSelector<RootState, UserType>(state => state.userState);
-  const { data, loading, error } = useQuery<
-    UserEntriesQuery,
-    UserEntriesQueryVariables
-  >(USER_ENTRIES_QUERY, {
-    variables: {
-      id: user?.id || '',
+  const dispatch = useDispatch();
+
+  const [deleteEntry, { loading }] = useMutation<
+    DeleteEntryMutation,
+    DeleteEntryMutationVariables
+  >(DELETE_ENTRY_MUTATION);
+
+  const { data } = useQuery<UserEntriesQuery, UserEntriesQueryVariables>(
+    USER_ENTRIES_QUERY,
+    {
+      variables: {
+        id: user?.id || '',
+      },
+      skip: !user?.id,
     },
-    skip: !user?.id,
-  });
+  );
+
+  const entries = data?.users?.entries;
+
+  const handleDelete = (id: string) => {
+    dispatch(
+      setModalAction({
+        headlineText: {
+          headline: `Action Required`,
+          text: 'Are you sure you want to delete this entry??',
+        },
+        callback: function() {
+          deleteEntry({
+            variables: {
+              input: {
+                id,
+                user_id: user?.id as string,
+              },
+            },
+          });
+        },
+      }),
+    );
+  };
 
   return (
     <Container>
@@ -77,14 +158,28 @@ export const Profile = () => {
           </UserInfo>
         </Area>
 
-        <Area>
-          <MediumSans>User Entries</MediumSans>
-          {data?.users?.entries.map(({ id, name }) => (
-            <Link to={`/entries/${id}`} key={`entry-${id}`}>
-              {name} <br />
-            </Link>
-          ))}
-        </Area>
+        {entries && entries.length > 0 && (
+          <Area>
+            <MediumSans>User Entries</MediumSans>
+            <EntriesList>
+              {data?.users?.entries.map(({ id, name }) => (
+                <div key={`entry-name-${id}`}>
+                  <Link to={`/entries/${id}`} key={`entry-${id}`}>
+                    {name}
+                  </Link>
+                  <Actions>
+                    <Link to={`/entries/${id}`} key={`entry-${id}`}>
+                      View Entry
+                    </Link>
+                    <button onClick={() => handleDelete(id)}>
+                      Delete Entry
+                    </button>
+                  </Actions>
+                </div>
+              ))}
+            </EntriesList>
+          </Area>
+        )}
       </Lock>
     </Container>
   );

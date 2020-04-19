@@ -39,7 +39,18 @@ export type CreateEntryInput = {
   user_id: Scalars['ID'],
 };
 
+export type CreateEntryResponse = {
+   __typename?: 'CreateEntryResponse',
+  entries: Array<Entries>,
+  id: Scalars['ID'],
+};
 
+
+
+export type DeleteEntryInput = {
+  id: Scalars['String'],
+  user_id: Scalars['ID'],
+};
 
 export type Entries = {
    __typename?: 'Entries',
@@ -87,7 +98,9 @@ export type Mutation = {
   updateForgottenPassword: ForgotPasswordResponse,
   logout: LogoutResponse,
   updateEntry: UpdateEntryResponse,
-  createEntry: Entries,
+  createEntry?: Maybe<CreateEntryResponse>,
+  deleteEntry: Array<Entries>,
+  updateResult: Scalars['String'],
 };
 
 
@@ -123,6 +136,16 @@ export type MutationUpdateEntryArgs = {
 
 export type MutationCreateEntryArgs = {
   input: CreateEntryInput
+};
+
+
+export type MutationDeleteEntryArgs = {
+  input: DeleteEntryInput
+};
+
+
+export type MutationUpdateResultArgs = {
+  input: UpdateResultInput
 };
 
 export type NewPasswordWithCodeInput = {
@@ -309,6 +332,12 @@ export type UpdateEntryResponse = {
   selections?: Maybe<Selection>,
 };
 
+export type UpdateResultInput = {
+  id: Scalars['ID'],
+  org_id: Scalars['ID'],
+  athlete_id: Scalars['ID'],
+};
+
 export type User = {
    __typename?: 'User',
   id: Scalars['String'],
@@ -328,6 +357,13 @@ export type LogoutMutationVariables = {};
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'LogoutResponse', status: string, message: Maybe<string> } };
 
+export type HeaderUserEntriesQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type HeaderUserEntriesQuery = { __typename?: 'Query', users: Maybe<{ __typename?: 'User', entries: Array<{ __typename?: 'Entries', id: string, name: string }> }> };
+
 export type UpdateEntrySelectionMutationVariables = {
   input: EntryInput
 };
@@ -340,7 +376,7 @@ export type CreateEntryMutationVariables = {
 };
 
 
-export type CreateEntryMutation = { __typename?: 'Mutation', createEntry: { __typename?: 'Entries', id: string } };
+export type CreateEntryMutation = { __typename?: 'Mutation', createEntry: Maybe<{ __typename?: 'CreateEntryResponse', id: string, entries: Array<{ __typename?: 'Entries', id: string }> }> };
 
 export type GetEntrySelectionsQueryVariables = {
   id: Scalars['ID']
@@ -361,6 +397,13 @@ export type GetOrganizationsQueryVariables = {};
 
 export type GetOrganizationsQuery = { __typename?: 'Query', organization: Maybe<{ __typename?: 'OrganizationPaginator', data: Array<{ __typename?: 'Organization', id: string, name: string, city: string, image: string, primary_color: string }> }> };
 
+export type StageUserEntriesQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type StageUserEntriesQuery = { __typename?: 'Query', users: Maybe<{ __typename?: 'User', entries: Array<{ __typename?: 'Entries', id: string, name: string }> }> };
+
 export type ForgotPasswordMutationVariables = {
   input: ForgotPasswordInput
 };
@@ -373,7 +416,14 @@ export type UserEntriesQueryVariables = {
 };
 
 
-export type UserEntriesQuery = { __typename?: 'Query', users: Maybe<{ __typename?: 'User', entries: Array<{ __typename?: 'Entries', id: string, name: string }> }> };
+export type UserEntriesQuery = { __typename?: 'Query', users: Maybe<{ __typename?: 'User', id: string, entries: Array<{ __typename?: 'Entries', id: string, name: string }> }> };
+
+export type DeleteEntryMutationVariables = {
+  input: DeleteEntryInput
+};
+
+
+export type DeleteEntryMutation = { __typename?: 'Mutation', deleteEntry: Array<{ __typename?: 'Entries', id: string, name: string }> };
 
 export type LoginMutationVariables = {
   input: LoginInput

@@ -13,6 +13,7 @@ export const Summary = styled.h2`
 
 export const CloseButton = styled.button<{
   positionAbsolute?: boolean;
+  marginTop?: number;
 }>`
   background: ${Color.darkBlue};
   color: white;
@@ -23,6 +24,7 @@ export const CloseButton = styled.button<{
   width: 100%;
   font-size: 18px;
   height: 44px;
+  ${({ marginTop }) => marginTop && `margin-top: ${marginTop}px`}
 
   ${({ positionAbsolute = false }) =>
     positionAbsolute &&

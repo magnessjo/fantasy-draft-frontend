@@ -18,6 +18,7 @@ export type ModalHeadlineTextType = {
 
 export type ModalTypes = Maybe<{
   headlineText?: ModalHeadlineTextType;
+  callback?: () => void;
 }>;
 
 export type AlertType = Maybe<{

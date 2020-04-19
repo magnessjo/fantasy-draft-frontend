@@ -23,6 +23,9 @@ const CREATE_ENTRY_MUTATION = gql`
   mutation createEntry($input: CreateEntryInput!) {
     createEntry(input: $input) {
       id
+      entries {
+        id
+      }
     }
   }
 `;
@@ -56,11 +59,17 @@ const NewEntryForm = styled.form`
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 80px);
+  padding: 0 20px;
   padding-top: 80px;
   background-image: url('/images/backgrounds/entry.jpg');
   background-position: center;
   background-size: cover;
   position: relative;
+  margin-top: -25px;
+
+  @media (min-width: ${Breakpoints.largeMin}px) {
+    margin-top: -70px;
+  }
 
   &:before {
     content: '';
@@ -157,8 +166,6 @@ const CreateEntry = () => {
         },
       });
 
-      console.log(response);
-
       const responseId = response?.data?.createEntry?.id;
 
       if (responseId) {
@@ -178,7 +185,8 @@ const CreateEntry = () => {
       <Lock>
         <p className="headline">Entry Name</p>
         <p>
-          Enter a name for the entry so you can quickly find it in your profile
+          Enter a name for the entry so you can quickly find it in the results
+          list.
         </p>
         <input
           type="text"

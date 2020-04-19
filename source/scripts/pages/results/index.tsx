@@ -61,6 +61,7 @@ const ENTRIES_QUERY = gql`
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
+  padding-bottom: 80px;
 `;
 
 const EntryWrapper = styled.div``;
@@ -69,8 +70,12 @@ const EntryWrapperRow = styled.div`
   display: flex;
   align-items: center;
   padding: 30px 20px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${Color.lighterGray};
   transition: background 1s;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
 
   &:hover {
     background-color: ${Color.lighterGray};
@@ -121,6 +126,10 @@ const EntryDetails = styled.div<{
     display: flex;
     align-items: center;
 
+    &:last-of-type {
+      border-bottom: none;
+    }
+
     & > p {
       width: 30px;
     }
@@ -149,8 +158,6 @@ const ResultEntry: FunctionComponent<EntryProps> = ({ entry, place }) => {
     }
     return value + 0;
   }, 0);
-
-  console.log(entryScore);
 
   return (
     <EntryWrapper>

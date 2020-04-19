@@ -116,6 +116,7 @@ export const Input = ({
         onChange={change}
         onBlur={blur}
         onFocus={focus}
+        data-validate={validateType}
       />
       {helpText && isValid === false && <HelpText>{helpText}</HelpText>}
     </InputWrapper>
