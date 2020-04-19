@@ -125,6 +125,7 @@ export const TeamPicker: FunctionComponent<TeamPickerProps> = ({
                 <AddButton
                   onClick={() =>
                     handleUpdateSelection({
+                      player: currentSelection.athlete,
                       organization: team,
                       currentSelection,
                     })

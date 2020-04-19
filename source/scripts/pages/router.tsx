@@ -1,8 +1,10 @@
 import React from 'react';
 import { Route, useLocation, Redirect, Switch } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { isValidSession } from 'scripts/lib/session';
 import { Breakpoints } from 'scripts/variables';
+import { RootState, SessionType } from 'scripts/types';
 
 // Pages
 
@@ -83,16 +85,16 @@ const Layout = ({
 const ProtectedRoute = ({
   path,
   Component,
+  sessionValid,
 }: {
   path: string;
   Component: any;
+  sessionValid?: Boolean;
 }) => {
-  const validSession = isValidSession();
-
   return (
     <Route
       path={path}
-      render={() => (validSession ? Component : <Redirect to="/login" />)}
+      render={() => (sessionValid ? Component : <Redirect to="/login" />)}
     />
   );
 };
@@ -109,6 +111,10 @@ const NoMatch = () => (
 
 const Router = () => {
   const location = useLocation();
+  const session = useSelector<RootState, SessionType>(
+    state => state.sessionState,
+  );
+  isValidSession();
 
   const nonHeaderPaths = [
     '/register',
@@ -130,12 +136,28 @@ const Router = () => {
       {!checkPaths(location.pathname, nonHeaderPaths) && (
         <Layout path={location.pathname}>
           <Switch>
-            <ProtectedRoute path="/profile" Component={<Profile />} />
-            <ProtectedRoute path="/entries/:id" Component={<Entries />} />
-            <ProtectedRoute path="/entries" Component={<Entries />} />
-            <ProtectedRoute path="/results" Component={<Results />} />
-            <ProtectedRoute path="/contact" Component={<ContactPage />} />
-            <ProtectedRoute path="/privacy" Component={<PrivacyPage />} />
+            <ProtectedRoute
+              path="/profile"
+              sessionValid={session?.valid}
+              Component={<Profile />}
+            />
+            <ProtectedRoute
+              path="/entries/:id"
+              sessionValid={session?.valid}
+              Component={<Entries />}
+            />
+            <ProtectedRoute
+              path="/entries"
+              sessionValid={session?.valid}
+              Component={<Entries />}
+            />
+            <ProtectedRoute
+              path="/results"
+              sessionValid={session?.valid}
+              Component={<Results />}
+            />
+            <Route path="/contact" Component={<ContactPage />} />
+            <Route path="/privacy" Component={<PrivacyPage />} />
             <Route path="/" exact render={() => <Home />} />
             <Route component={NoMatch} />
           </Switch>

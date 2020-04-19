@@ -18,6 +18,7 @@ export type ModalHeadlineTextType = {
 
 export type ModalTypes = Maybe<{
   headlineText?: ModalHeadlineTextType;
+  callback?: () => void;
 }>;
 
 export type AlertType = Maybe<{
@@ -36,7 +37,8 @@ export type UserType = Maybe<{
 export type SessionType = Maybe<{
   time: Date;
   token: string;
-  expires: number;
+  expires: Date;
+  valid: boolean;
 }>;
 
 export type RootState = ReturnType<typeof rootReducer>;

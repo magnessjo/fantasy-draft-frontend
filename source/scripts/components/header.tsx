@@ -1,23 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, FunctionComponent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAlertAction, setUserAction, setSessionAction } from 'scripts/store';
-import { isValidSession } from 'scripts/lib/session';
 import { Lock } from 'scripts/styles/lock';
 import { Color, Breakpoints } from 'scripts/variables';
 import {
   LogoutMutation,
   LogoutMutationVariables,
 } from 'scripts/generated/types';
+import { RootState, UserType, SessionType } from 'scripts/types';
 
 const LOGOUT = gql`
   mutation logout {
     logout {
       status
       message
+    }
+  }
+`;
+
+const HEADER_QUERY = gql`
+  query headerUserEntries($id: ID!) {
+    users(id: $id) {
+      entries {
+        id
+        name
+      }
     }
   }
 `;
@@ -94,9 +105,12 @@ const Wrapper = styled.header`
   }
 `;
 
-const LoggedIn = () => {
+const LoggedIn: FunctionComponent<{ entriesCount: number }> = ({
+  entriesCount,
+}) => {
   const history = useHistory();
   const dispatch = useDispatch();
+
   const [logoutAction, { error, loading, data }] = useMutation<
     LogoutMutation,
     LogoutMutationVariables
@@ -120,9 +134,11 @@ const LoggedIn = () => {
 
   return (
     <nav>
-      <Link to="/results">
-        <span>Results</span>
-      </Link>
+      {entriesCount > 0 && (
+        <Link to="/results">
+          <span>Results</span>
+        </Link>
+      )}
       <Link to="/profile">
         <span>Profile</span>
       </Link>
@@ -142,6 +158,18 @@ const LoggedOut = () => (
 );
 
 export const Header = () => {
+  const user = useSelector<RootState, UserType>(state => state.userState);
+  const session = useSelector<RootState, SessionType>(
+    state => state.sessionState,
+  );
+
+  const { data } = useQuery(HEADER_QUERY, {
+    variables: {
+      id: user?.id || '',
+    },
+    skip: !user?.id,
+  });
+
   return (
     <Wrapper>
       <Lock>
@@ -149,7 +177,11 @@ export const Header = () => {
           <a href="/">
             <img src="/images/logo.png" aria-hidden />
           </a>
-          {isValidSession() ? <LoggedIn /> : <LoggedOut />}
+          {session?.valid && user ? (
+            <LoggedIn entriesCount={data?.users?.entries.length || 0} />
+          ) : (
+            <LoggedOut />
+          )}
         </div>
       </Lock>
     </Wrapper>

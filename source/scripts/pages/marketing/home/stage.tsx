@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { isValidSession } from 'scripts/lib/session';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 import { Lock } from 'scripts/styles/lock';
+import { Loader } from 'scripts/styles/loader';
 import { CTAStyles } from 'scripts/styles/call-to-action';
 import { Breakpoints, Color } from 'scripts/variables';
 import { RootState, UserType } from 'scripts/types';
@@ -12,6 +14,22 @@ import {
   XLargeSerifFont,
   MediumSansFont,
 } from 'scripts/styles/fonts';
+import {
+  StageUserEntriesQuery,
+  StageUserEntriesQueryVariables,
+  Entries,
+} from 'scripts/generated/types';
+
+const STAGE_QUERY = gql`
+  query stageUserEntries($id: ID!) {
+    users(id: $id) {
+      entries {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const Container = styled.section`
   position: relative;
@@ -61,12 +79,12 @@ const Container = styled.section`
         transform: translate(-50%, -50%);
         border-radius: 50%;
         background-color: black;
-        padding: 160vh;
+        padding: 120vh;
         height: 200px;
         width: 200px;
         background: radial-gradient(
           rgba(255, 255, 255, 1) 0,
-          rgba(255, 255, 255, 0.8) 30%,
+          rgba(255, 255, 255, 0.7) 30%,
           rgba(255, 255, 255, 0.3) 60%,
           rgba(255, 255, 255, 0) 90%
         );
@@ -147,12 +165,16 @@ const Actions = styled.div`
   }
 `;
 
-const LoggedIn = () => (
+const LoggedIn: FunctionComponent<{ entriesCount: number }> = ({
+  entriesCount,
+}) => (
   <div>
     <LargeText>Welcome to best draft game on the internet!</LargeText>
     <Actions>
       <SignUpButton to="/entries">Create a new Entry</SignUpButton>
-      <SignUpButton to="/profile">View Entries</SignUpButton>
+      {entriesCount > 0 && (
+        <SignUpButton to="/profile">View Entries</SignUpButton>
+      )}
     </Actions>
   </div>
 );
@@ -172,6 +194,16 @@ const LoggedOut = () => (
 export const Stage = () => {
   const user = useSelector<RootState, UserType>(state => state.userState);
 
+  const { data } = useQuery<
+    StageUserEntriesQuery,
+    StageUserEntriesQueryVariables
+  >(STAGE_QUERY, {
+    variables: {
+      id: user?.id || '',
+    },
+    skip: !user?.id,
+  });
+
   return (
     <Container>
       <video
@@ -183,7 +215,13 @@ export const Stage = () => {
         <source src="/videos/hugs.mp4" type="video/mp4" />
       </video>
       <div>
-        <Lock>{isValidSession() && user ? <LoggedIn /> : <LoggedOut />}</Lock>
+        <Lock>
+          {user?.id ? (
+            <LoggedIn entriesCount={data?.users?.entries.length || 0} />
+          ) : (
+            <LoggedOut />
+          )}
+        </Lock>
       </div>
     </Container>
   );

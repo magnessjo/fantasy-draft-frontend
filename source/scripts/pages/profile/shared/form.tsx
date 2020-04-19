@@ -79,7 +79,8 @@ export const UserForm = ({
     );
 
     const list = inputs.filter((input: HTMLInputElement) => {
-      const isValid = validate(input.type, input.value);
+      const type = input.getAttribute('data-validate');
+      const isValid = validate(type || input.type, input.value);
       return isValid === false;
     });
 

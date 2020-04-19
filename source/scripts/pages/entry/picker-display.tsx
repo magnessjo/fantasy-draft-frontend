@@ -19,7 +19,7 @@ export const SliderWrapper = styled.div<{
   width: 200%;
 
   @media (min-width: ${Breakpoints.largeMin}px) {
-    height: calc(100vh - 180px);
+    height: calc(100vh - 300px);
   }
 `;
 
@@ -62,6 +62,7 @@ const DesktopView = styled.div`
 
   & > div {
     height: calc(100% - 70px);
+    max-height: calc(100vh - 190px);
   }
 
   & > button {

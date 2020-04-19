@@ -1,14 +1,32 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
+import { gql } from 'apollo-boost';
 import { Color, Breakpoints } from 'scripts/variables';
 import { EntryType } from '../shared/game-types';
 import { Maybe } from 'scripts/types';
+import { useQuery } from '@apollo/react-hooks';
+import {
+  DraftOrderQuery,
+  DraftOrderQueryVariables,
+} from 'scripts/generated/types';
 
 type SelectionsPropsType = {
   entries: Array<EntryType>;
   currentSelection: Maybe<EntryType>;
   handleSelectionClick: (arg: EntryType) => void;
 };
+
+const DEFAULT_SELECTIONS_QUERY = gql`
+  query draftOrder {
+    draftOrder {
+      id
+      team {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const EntryListContainer = styled.div`
   width: 100%;
@@ -20,8 +38,8 @@ const EntryListContainer = styled.div`
     background-color: ${Color.darkBlue};
   }
 
-  @media (min-width: ${Breakpoints.largeMin}px) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (min-width: ${Breakpoints.largeMin}px) and (max-width: ${Breakpoints.largeMax}px) {
+    grid-template-columns: repeat(6, 1fr);
   }
 
   @media (min-width: ${Breakpoints.desktopMin}px) {
@@ -39,6 +57,17 @@ const EntryLayout = styled.button<{
 
   @media (max-width: ${Breakpoints.smallMax}px) {
     border-bottom: 2px solid ${Color.darkBlue};
+  }
+
+  @media (min-width: ${Breakpoints.largeMin}px) and (max-width: ${Breakpoints.largeMax}px) {
+    grid-column: span 2;
+  }
+
+  &:nth-of-type(31),
+  &:nth-of-type(32) {
+    @media (min-width: ${Breakpoints.largeMin}px) and (max-width: ${Breakpoints.largeMax}px) {
+      grid-column: span 3;
+    }
   }
 
   &:hover .number > p {
@@ -107,6 +136,15 @@ const Team = styled.div`
     width: 40px;
     position: relative;
   }
+
+  & p {
+    position: absolute;
+    bottom: -10px;
+    white-space: nowrap;
+    right: -10px;
+    font-size: 10px;
+    font-weight: bold;
+  }
 `;
 
 export const Selections: FunctionComponent<SelectionsPropsType> = ({
@@ -115,6 +153,11 @@ export const Selections: FunctionComponent<SelectionsPropsType> = ({
   handleSelectionClick,
 }) => {
   if (entries) {
+    const { data: defaultData, loading } = useQuery<
+      DraftOrderQuery,
+      DraftOrderQueryVariables
+    >(DEFAULT_SELECTIONS_QUERY);
+
     return (
       <EntryListContainer>
         {entries.map((entry: EntryType, placement) => {
@@ -123,6 +166,10 @@ export const Selections: FunctionComponent<SelectionsPropsType> = ({
           const teamColor = completedSelection
             ? entry?.organization?.primary_color
             : null;
+
+          const defaultPick = defaultData?.draftOrder?.find(
+            defaultEntry => parseFloat(defaultEntry.id) === entry.pick_number,
+          );
 
           return (
             <EntryLayout
@@ -158,6 +205,11 @@ export const Selections: FunctionComponent<SelectionsPropsType> = ({
                     src={`/images/teams/${entry?.organization?.image}`}
                     alt={`image of ${entry?.organization?.name}`}
                   />
+
+                  {!loading &&
+                    entry?.organization?.name !== defaultPick?.team.name && (
+                      <p>From {defaultPick?.team.name}</p>
+                    )}
                 </Team>
               </EntryWrapper>
             </EntryLayout>

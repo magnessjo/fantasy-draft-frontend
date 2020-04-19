@@ -11,17 +11,19 @@ import {
 } from 'scripts/generated/types';
 import { EntryType } from '../entry/shared/game-types';
 
+type Entry = {
+  id: string;
+  score: Maybe<string | number>;
+  name: string;
+  user: Maybe<{
+    username: string;
+  }>;
+  selections: Array<EntryType>;
+};
+
 type EntryProps = {
   place: number;
-  entry: {
-    id: string;
-    score: Maybe<string>;
-    name: string;
-    user: Maybe<{
-      username: string;
-    }>;
-    selections: Array<EntryType>;
-  };
+  entry: Entry;
 };
 
 const ENTRIES_QUERY = gql`
@@ -61,6 +63,7 @@ const ENTRIES_QUERY = gql`
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
+  padding-bottom: 80px;
 `;
 
 const EntryWrapper = styled.div``;
@@ -69,8 +72,12 @@ const EntryWrapperRow = styled.div`
   display: flex;
   align-items: center;
   padding: 30px 20px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${Color.lighterGray};
   transition: background 1s;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
 
   &:hover {
     background-color: ${Color.lighterGray};
@@ -121,6 +128,10 @@ const EntryDetails = styled.div<{
     display: flex;
     align-items: center;
 
+    &:last-of-type {
+      border-bottom: none;
+    }
+
     & > p {
       width: 30px;
     }
@@ -143,15 +154,6 @@ const EntryDetails = styled.div<{
 const ResultEntry: FunctionComponent<EntryProps> = ({ entry, place }) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  const entryScore = entry.selections.reduce((value, selection) => {
-    if (selection?.score) {
-      return value + parseFloat(selection.score);
-    }
-    return value + 0;
-  }, 0);
-
-  console.log(entryScore);
-
   return (
     <EntryWrapper>
       <EntryWrapperRow>
@@ -165,10 +167,10 @@ const ResultEntry: FunctionComponent<EntryProps> = ({ entry, place }) => {
             </button>
           </EntryRows>
         </div>
-        <p className="score">{entryScore}</p>
+        <p className="score">{entry.score}</p>
       </EntryWrapperRow>
       <EntryDetails show={showDetails}>
-        {entry.selections?.map(selection => (
+        {entry.selections?.map((selection) => (
           <div key={`selection-${selection.id}`}>
             <p>{selection.pick_number}</p>
             <div>
@@ -190,19 +192,39 @@ const ResultEntry: FunctionComponent<EntryProps> = ({ entry, place }) => {
 };
 
 export const Results = () => {
-  const { data, loading, error } = useQuery<
+  const { data, loading, error, refetch } = useQuery<
     GetEntriesQuery,
     GetEntriesQueryVariables
-  >(ENTRIES_QUERY);
+  >(ENTRIES_QUERY, {
+    pollInterval: 120000,
+  });
 
   if (loading) return <Loader />;
-
-  console.log(error);
   if (error) return null;
+
+  const entryScore = (entry: Entry) =>
+    entry.selections.reduce((value, selection) => {
+      if (selection?.score) {
+        return value + parseFloat(selection.score);
+      }
+      return value + 0;
+    }, 0);
+
+  const entries = data?.entries.map((entry) => ({
+    ...entry,
+    score: entryScore(entry),
+  }));
+
+  entries?.sort((a, b) => {
+    if (a.score > b.score) return -1;
+    if (b.score > a.score) return 1;
+
+    return 0;
+  });
 
   return (
     <Container>
-      {data?.entries.map((entry, place) => (
+      {entries?.map((entry, place) => (
         <ResultEntry key={`entry-${entry.id}`} entry={entry} place={place} />
       ))}
     </Container>

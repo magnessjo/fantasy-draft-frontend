@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMutation } from '@apollo/react-hooks';
 import { AccessabilityElement } from 'scripts/styles/accessability';
 import { Lock } from 'scripts/styles/lock';
-import { Breakpoints, Color } from 'scripts/variables';
+import { Breakpoints } from 'scripts/variables';
 import { setAlertAction } from 'scripts/store';
 import { Selections } from './selections';
 import { PickerDisplay } from './picker-display';
@@ -18,7 +18,11 @@ import {
   UpdateEntrySelectionMutationVariables,
   Athlete,
   Maybe,
+  ResetEntryMutation,
+  ResetEntryMutationVariables,
 } from 'scripts/generated/types';
+import { RootState, UserType } from 'scripts/types';
+import { useParams } from 'react-router';
 
 type GameProps = {
   entries: Array<EntryType>;
@@ -58,12 +62,28 @@ const ENTRY_SELECTION_MUTATION = gql`
   }
 `;
 
-const Container = styled.section`
-  padding: 20px 0;
-
-  @media (min-width: ${Breakpoints.largeMin}px) {
-    padding: 60px 0;
+const RESET_SELECTIONS_MUTATION = gql`
+  mutation resetEntry($input: ResetEntryInput!) {
+    resetEntry(input: $input) {
+      id
+      entries {
+        id
+        selections {
+          id
+          athlete {
+            id
+          }
+          organization {
+            id
+          }
+        }
+      }
+    }
   }
+`;
+
+const Container = styled.section`
+  padding-bottom: 80px;
 `;
 
 const Modal = styled.div<{ show: boolean }>`
@@ -71,10 +91,11 @@ const Modal = styled.div<{ show: boolean }>`
   background-color: white;
   z-index: 999;
   position: fixed;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   top: 0;
   left: 0;
+  box-shadow: 0 0 1000px 1900px white;
 
   @media (min-width: ${Breakpoints.mediumMin}px) {
     height: calc(100vh - 40px);
@@ -114,6 +135,9 @@ const SelectionController = styled.div`
     height: 100%;
 
     & p {
+      min-width: 280px;
+      width: 80%;
+      text-align: center;
     }
 
     & > div {
@@ -152,6 +176,12 @@ const SelectionController = styled.div`
   }
 `;
 
+const ResetAllEntries = styled.button`
+  margin-bottom: 30px;
+  float: right;
+  text-decoration: underline;
+`;
+
 const SelectionControllerComponent: FunctionComponent<SelectionControllerComponentProps> = ({
   currentSelection,
   setCurrentSelection,
@@ -163,18 +193,21 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
   const getAddSelection = (id: number) => (id === 33 ? 1 : id);
   const getSubSelection = (id: number) => (id < 1 ? 32 : id);
 
+  const getPreviousId = getEntryById(
+    getSubSelection(currentSelection.pick_number - 1),
+  );
+
+  const getNextId = getEntryById(
+    getAddSelection(currentSelection.pick_number + 1),
+  );
+
   return (
     <SelectionController>
       <div className="wrapper">
         <div>
-          <button
-            onClick={() =>
-              setCurrentSelection(
-                //@ts-ignore
-                getEntryById(getSubSelection(currentSelection.pick_number - 1)),
-              )
-            }
-          ></button>
+          {getPreviousId && (
+            <button onClick={() => setCurrentSelection(getPreviousId)}></button>
+          )}
 
           <p>
             #{currentSelection.pick_number} -{' '}
@@ -187,14 +220,9 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
             )}
           </p>
 
-          <button
-            onClick={() =>
-              setCurrentSelection(
-                //@ts-ignore
-                getEntryById(getAddSelection(currentSelection.selection + 1)),
-              )
-            }
-          ></button>
+          {getNextId && (
+            <button onClick={() => setCurrentSelection(getNextId)}></button>
+          )}
         </div>
       </div>
     </SelectionController>
@@ -203,6 +231,8 @@ const SelectionControllerComponent: FunctionComponent<SelectionControllerCompone
 
 export const Game: FunctionComponent<GameProps> = ({ entries }) => {
   const dispatch = useDispatch();
+  const { id: entry_id } = useParams();
+  const user = useSelector<RootState, UserType>((state) => state.userState);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
 
   const [currentSelection, setCurrentSelection] = useState<Maybe<EntryType>>(
@@ -219,7 +249,7 @@ export const Game: FunctionComponent<GameProps> = ({ entries }) => {
   useEffect(() => {
     if (currentSelection) {
       const updatedEntry = entries.find(
-        entry => entry.id === currentSelection.id,
+        (entry) => entry.id === currentSelection.id,
       );
 
       if (updatedEntry && updatedEntry !== currentSelection) {
@@ -228,17 +258,32 @@ export const Game: FunctionComponent<GameProps> = ({ entries }) => {
     }
   }, [entries, currentSelection, setCurrentSelection]);
 
-  const [updateEntry, { loading }] = useMutation<
+  const [updateEntry] = useMutation<
     UpdateEntrySelectionMutation,
     UpdateEntrySelectionMutationVariables
   >(ENTRY_SELECTION_MUTATION);
+
+  const [resetGame] = useMutation<
+    ResetEntryMutation,
+    ResetEntryMutationVariables
+  >(RESET_SELECTIONS_MUTATION);
+
+  const handleReset = () => {
+    resetGame({
+      variables: {
+        input: {
+          entry_id: entry_id as string,
+          user_id: user?.id as string,
+        },
+      },
+    });
+  };
 
   const handleUpdateSelection = async ({
     player,
     organization,
     currentSelection,
   }: UpdateSelectionType) => {
-    const athleteId = player ? player.id : currentSelection?.athlete?.id;
     const organizationId = organization
       ? organization.id
       : currentSelection?.organization.id;
@@ -253,7 +298,7 @@ export const Game: FunctionComponent<GameProps> = ({ entries }) => {
           input: {
             id: currentSelection.id,
             org_id: organizationId,
-            athlete_id: athleteId ?? null,
+            athlete_id: player?.id ?? null,
           },
         },
       });
@@ -266,6 +311,14 @@ export const Game: FunctionComponent<GameProps> = ({ entries }) => {
             time: 2000,
           }),
         );
+
+        if (player !== null) {
+          const index = entries.findIndex(
+            (selection) => selection.id === currentSelection.id,
+          );
+          const upcomingSelection = index + 1 > 31 ? 0 : index + 1;
+          setCurrentSelection(entries[upcomingSelection]);
+        }
       }
     }
   };
@@ -282,6 +335,9 @@ export const Game: FunctionComponent<GameProps> = ({ entries }) => {
         <AccessabilityElement as="h1">
           Make your Selections
         </AccessabilityElement>
+        <ResetAllEntries onClick={handleReset}>
+          Reset All Entries
+        </ResetAllEntries>
         <Selections
           entries={entries}
           handleSelectionClick={handleSelectionClick}
@@ -306,6 +362,7 @@ export const Game: FunctionComponent<GameProps> = ({ entries }) => {
                     currentSelection={currentSelection}
                     setShowPlayer={setShowPlayer}
                     handleUpdateSelection={handleUpdateSelection}
+                    entries={entries}
                   />
                   <TeamPicker
                     handleUpdateSelection={handleUpdateSelection}

@@ -35,15 +35,17 @@ const PlayerInfoModal = styled.div`
   height: 100%;
   z-index: 999;
   position: relative;
+  max-width: 740px;
+  margin: 0 auto;
 
   & > div {
-    @media (min-width: ${Breakpoints.desktopMin}px) {
+    @media (min-width: ${Breakpoints.largeMin}px) {
       display: flex;
       align-items: center;
     }
 
     & > div {
-      @media (min-width: ${Breakpoints.desktopMin}px) {
+      @media (min-width: ${Breakpoints.largeMin}px) {
         width: 60%;
         padding-left: 20px;
       }
@@ -81,33 +83,35 @@ const PlayerDescription = styled.p`
 export const PlayerModel = ({
   setShowPlayer,
   playerInfo,
-}: PlayerModalProps) => {
-  return (
-    <Modal>
-      {playerInfo && (
-        <PlayerInfoModal>
-          <div>
+}: PlayerModalProps) => (
+  <Modal>
+    {playerInfo && (
+      <PlayerInfoModal>
+        <div>
+          {playerInfo.image && (
             <img
               src={`/images/players/2020/${playerInfo.image}`}
               alt={`image of ${playerInfo.last_name}`}
             />
-            <div>
-              <p className="name">{` ${playerInfo.first_name} ${playerInfo.last_name}`}</p>
-              <p>
-                {playerInfo.position}, {playerInfo.school}
-              </p>
-              <p>
-                {playerInfo.height}, {playerInfo.weight}
-              </p>
-              <p>{playerInfo.school_standing}</p>
-            </div>
-          </div>
-          {playerInfo.description && (
-            <PlayerDescription>{playerInfo.description}</PlayerDescription>
           )}
-          <CloseButton onClick={() => setShowPlayer(null)}>Close</CloseButton>
-        </PlayerInfoModal>
-      )}
-    </Modal>
-  );
-};
+          <div>
+            <p className="name">{` ${playerInfo.first_name} ${playerInfo.last_name}`}</p>
+            <p>
+              {playerInfo.position}, {playerInfo.school}
+            </p>
+            <p>
+              {playerInfo.height}, {playerInfo.weight}
+            </p>
+            <p>{playerInfo.school_standing}</p>
+          </div>
+        </div>
+        {playerInfo.description && (
+          <PlayerDescription>{playerInfo.description}</PlayerDescription>
+        )}
+        <CloseButton marginTop={50} onClick={() => setShowPlayer(null)}>
+          Close
+        </CloseButton>
+      </PlayerInfoModal>
+    )}
+  </Modal>
+);

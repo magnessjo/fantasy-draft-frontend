@@ -15,14 +15,14 @@ const CloseWrapper = styled.div<{
   position: fixed;
   justify-content: center;
   align-items: center;
-  z-index: 99;
+  z-index: 999;
   display: none;
   ${({ showing }) => showing && `display: flex;`}
 `;
 
 const Container = styled.div`
-  height: 60vh;
-  width: 60vw;
+  height: 70vh;
+  width: 90vw;
   min-height: 200px;
   min-width: 200px;
   padding: 20px;
@@ -32,9 +32,12 @@ const Container = styled.div`
   cursor: default;
   position: relative;
   text-align: center;
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, .8);
 
   @media (min-width: ${Breakpoints.largeMin}px) {
     padding: 40px;
+    height: 60vh;
+    width: 60vw;
   }
 
   & > div {
@@ -52,7 +55,6 @@ const Container = styled.div`
     background-color: ${Color.black};
     color: ${Color.white};
     align-self: flex-end;
-    margin: 0 auto;
   }
 
   & button[aria-hidden] {
@@ -77,17 +79,26 @@ const HeadlineTextStyle = styled.div`
   }
 `;
 
-const HeadlineText = ({
-  headline,
-  text,
-  close,
-}: ModalHeadlineTextType & { close: () => void }) => (
-  <HeadlineTextStyle>
-    <LargeSans>{headline}</LargeSans>
-    <p>{text}</p>
-    <button onClick={close}>Close Modal</button>
-  </HeadlineTextStyle>
-);
+const Actions = styled.div`
+  @media (min-width: ${Breakpoints.largeMin}px) {
+    display: flex;
+    justify-content: center;
+  }
+
+  & > button + button {
+    width: 140px;
+
+    @media (max-width: ${Breakpoints.mediumMax}px) {
+      display: block;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+
+    @media (min-width: ${Breakpoints.largeMin}px) {
+      margin-left: 10px;
+    }
+  }
+`;
 
 export const Modal = () => {
   const dispatch = useDispatch();
@@ -103,16 +114,32 @@ export const Modal = () => {
 
   if (!modalState || typeof modalState === 'undefined') return null;
 
+  const handleProceed = () => {
+    if (modalState.callback) {
+      dispatch(setModalAction(null));
+      modalState.callback();
+    }
+  };
+
   return (
     <CloseWrapper onClick={close} showing={showing}>
       <Container onClick={event => event.stopPropagation()}>
         <div>
-          <button onClick={close} aria-hidden="true" z-index="-1">
+          <button onClick={close} aria-hidden="true">
             X
           </button>
-          {modalState.headlineText && (
-            <HeadlineText {...modalState.headlineText} close={close} />
-          )}
+          <HeadlineTextStyle>
+            <LargeSans>{modalState?.headlineText?.headline}</LargeSans>
+            <p>{modalState?.headlineText?.text}</p>
+            <Actions>
+              {!modalState.callback && (
+                <button onClick={close}>Close Modal</button>
+              )}
+              {modalState.callback && (
+                <button onClick={handleProceed}>Proceed</button>
+              )}
+            </Actions>
+          </HeadlineTextStyle>
         </div>
       </Container>
     </CloseWrapper>

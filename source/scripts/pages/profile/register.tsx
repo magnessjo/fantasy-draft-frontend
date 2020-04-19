@@ -32,8 +32,8 @@ const initialFormState = {
 };
 
 const makeErrorMessage = (error: Readonly<GraphQLError[]>) => {
-  const validations = error.map(obj => obj?.extensions?.validation);
-  const messages = validations.map(validation => {
+  const validations = error.map((obj) => obj?.extensions?.validation);
+  const messages = validations.map((validation) => {
     if (validation['input.email']) {
       return 'The email that you have entered is not valid.  Please select another email.';
     }
@@ -63,7 +63,7 @@ export const Register = () => {
           headlineText: {
             headline: `Action Required`,
             text:
-              'You are one step away from joining the coolest draft game that the author of this website is aware of.  Please check the email that you used to signup for a validation email.  Once your email is validated, you can start making your draft entries and inviting your friends to compete for the prize of being right.',
+              'You can login without verifying your email at this time.  This app is a beta so we are only allowing people we know to enter.  ',
           },
         }),
       );

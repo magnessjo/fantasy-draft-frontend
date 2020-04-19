@@ -46,6 +46,9 @@ export const Login = () => {
       const expires = loginData?.expires_in;
 
       if (token && expires && user) {
+        const currentDate = new Date();
+        currentDate.setMinutes(currentDate.getMinutes() + 30);
+
         dispatch(
           setUserAction({
             id: user.id,
@@ -66,7 +69,8 @@ export const Login = () => {
           setSessionAction({
             time: getSessionTime(),
             token,
-            expires,
+            expires: new Date(currentDate),
+            valid: true,
           }),
         );
       }
